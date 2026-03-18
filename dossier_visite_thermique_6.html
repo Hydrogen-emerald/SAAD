@@ -1,0 +1,2266 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Coprodiag DVT">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0d3f5e">
+<meta name="format-detection" content="telephone=no">
+<title>Dossier Visite Thermique – Coprodiag</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue: #0b9fd4;
+  --blue-dark: #0a7faa;
+  --blue-deep: #0d3f5e;
+  --blue-light: #e4f4fb;
+  --blue-mid: #c2e8f5;
+  --accent: #f5a623;
+  --green: #27ae60;
+  --red: #e74c3c;
+  --gray: #f5f7fa;
+  --border: #d0e8f2;
+  --text: #1a3a4c;
+  --muted: #7a9bac;
+  --white: #ffffff;
+  --shadow: 0 2px 16px rgba(11,159,212,0.10);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #eaf4f9;
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+/* ─── APP SHELL ─────────────────────────────────────── */
+.app { display: flex; min-height: 100vh; }
+
+/* ─── SIDEBAR ────────────────────────────────────────── */
+.sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: var(--blue-deep);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-logo {
+  padding: 24px 20px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+
+.logo-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 42px;
+  height: 42px;
+  background: var(--blue);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logo-icon svg { width: 24px; height: 24px; fill: white; }
+
+.logo-text { line-height: 1.2; }
+.logo-text strong { display: block; color: white; font-size: 15px; font-weight: 700; letter-spacing: 0.3px; }
+.logo-text span { color: rgba(255,255,255,0.5); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+
+.sidebar-nav { padding: 12px 0; flex: 1; }
+
+.nav-section-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: rgba(255,255,255,0.35);
+  padding: 16px 20px 6px;
+}
+
+
+/* ─── NAV ITEM AS BUTTON ─────────────────────────────────────────────────*/
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: all .15s;
+  border-left: 3px solid transparent;
+  color: rgba(255,255,255,0.65);
+  font-size: 13px;
+  font-weight: 500;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  background: transparent;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  width: 100%;
+  text-align: left;
+  font-family: 'DM Sans', sans-serif;
+  -webkit-appearance: none;
+  outline: none;
+  min-height: 48px;
+}
+.nav-item:hover { background: rgba(255,255,255,0.07); color: white; }
+.nav-item.active { background: rgba(11,159,212,0.22); border-left-color: var(--blue); color: white; }
+.nav-item .nav-num {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; flex-shrink: 0;
+  color: rgba(255,255,255,0.7);
+}
+.nav-item.active .nav-num { background: var(--blue); color: white; }
+
+
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.btn-pdf {
+  width: 100%;
+  background: var(--blue);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 11px 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background .15s;
+}
+.btn-pdf:hover { background: var(--blue-dark); }
+.btn-pdf svg { width: 16px; height: 16px; fill: white; flex-shrink: 0; }
+
+/* ─── MAIN CONTENT ──────────────────────────────────── */
+.main { flex: 1; padding: 32px 40px; max-width: 960px; }
+
+.section-page { display: none; }
+.section-page.active { display: block; }
+
+/* ─── PAGE HEADER ───────────────────────────────────── */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.page-header-icon {
+  width: 44px; height: 44px;
+  background: var(--blue);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.page-header-icon svg { width: 22px; height: 22px; fill: white; }
+
+.page-header h1 { font-size: 22px; font-weight: 700; color: var(--blue-deep); }
+.page-header p { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+/* ─── CARD ──────────────────────────────────────────── */
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+}
+
+.card-header {
+  background: var(--blue);
+  color: white;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.card-header.alt { background: var(--blue-deep); }
+.card-header.sub {
+  background: var(--blue-light);
+  color: var(--blue-dark);
+  font-size: 12px;
+}
+
+.card-body { padding: 0; }
+
+/* ─── FORM ROWS ─────────────────────────────────────── */
+.form-row {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--border);
+  min-height: 40px;
+}
+.form-row:last-child { border-bottom: none; }
+.form-row.tall { min-height: 80px; }
+
+.form-label {
+  width: 200px;
+  min-width: 200px;
+  background: var(--gray);
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--blue-dark);
+  display: flex;
+  align-items: center;
+  border-right: 1px solid var(--border);
+}
+
+.form-label.wide { width: 250px; min-width: 250px; }
+
+.form-field {
+  flex: 1;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.form-field input[type="text"],
+.form-field input[type="date"],
+.form-field input[type="number"],
+.form-field textarea {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  background: var(--white);
+  transition: border-color .15s;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.form-field input[type="text"]:focus,
+.form-field input[type="date"]:focus,
+.form-field input[type="number"]:focus,
+.form-field textarea:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(11,159,212,0.10);
+}
+
+.form-field input.full { width: 100%; }
+.form-field input.half { width: 48%; }
+.form-field input.third { width: 30%; }
+.form-field input.small { width: 80px; }
+.form-field input.medium { width: 140px; }
+
+.form-field textarea { width: 100%; min-height: 70px; resize: vertical; }
+
+
+/* ─── OPT BUTTONS (iOS safe) ──────────────────────────────────────────────*/
+.opts { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 12px; align-items: center; }
+
+.opt-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  padding: 8px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  background: white;
+  cursor: pointer;
+  transition: all .15s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  -webkit-appearance: none;
+  min-height: 38px;
+  user-select: none;
+  -webkit-user-select: none;
+  outline: none;
+}
+
+.opt-btn:hover { border-color: var(--blue); color: var(--blue); }
+
+.opt-btn.selected {
+  background: var(--blue) !important;
+  color: white !important;
+  border-color: var(--blue) !important;
+}
+
+/* ─── ETAT BUTTONS (bon/usage/mauvais) iOS safe ───────────────────────────*/
+.etat-opts { display: flex; gap: 6px; padding: 6px 10px; flex: 1; align-items: center; flex-wrap: wrap; }
+
+.etat-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  border: 1.5px solid;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  -webkit-appearance: none;
+  min-height: 38px;
+  outline: none;
+  background: white;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: all .13s;
+}
+
+.etat-btn.bon { color: var(--green); border-color: var(--green); }
+.etat-btn.bon.selected { background: var(--green) !important; color: white !important; }
+
+.etat-btn.usage { color: var(--accent); border-color: var(--accent); }
+.etat-btn.usage.selected { background: var(--accent) !important; color: white !important; }
+
+.etat-btn.mauvais { color: var(--red); border-color: var(--red); }
+.etat-btn.mauvais.selected { background: var(--red) !important; color: white !important; }
+
+
+/* ─── TABLE MENUISERIES ─────────────────────────────── */
+.menu-table { width: 100%; border-collapse: collapse; }
+.menu-table th {
+  background: var(--blue-light);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--blue-dark);
+  padding: 8px 10px;
+  text-align: left;
+  border: 1px solid var(--border);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.menu-table td {
+  border: 1px solid var(--border);
+  padding: 0;
+}
+.menu-table td input {
+  width: 100%;
+  border: none;
+  padding: 8px 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: var(--text);
+  outline: none;
+  background: transparent;
+}
+.menu-table td input:focus { background: var(--blue-light); }
+.menu-table tr:nth-child(even) td { background: #fafcff; }
+.menu-table tr:nth-child(even) td input:focus { background: var(--blue-light); }
+
+/* ─── SECTION MURS ──────────────────────────────────── */
+.mur-subheader {
+  background: var(--blue-mid);
+  padding: 8px 20px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--blue-dark);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.mur-subheader input {
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 3px 8px;
+  font-size: 12px;
+  font-family: 'DM Sans', sans-serif;
+  width: 160px;
+  outline: none;
+}
+.ep-box {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+.ep-box input { width: 60px; }
+
+/* ─── APPT CARDS ────────────────────────────────────── */
+.appt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 12px; }
+.appt-nb { grid-column: 1/-1; }
+
+.appt-card { background: white; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+.appt-card-header {
+  background: var(--blue-deep);
+  color: white;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.appt-card-header input {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 6px;
+  color: white;
+  padding: 3px 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  width: 80px;
+  outline: none;
+}
+.appt-card-header input::placeholder { color: rgba(255,255,255,0.5); }
+
+.add-appt-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--blue-light);
+  border: 2px dashed var(--blue);
+  border-radius: 10px;
+  padding: 14px 20px;
+  width: 100%;
+  cursor: pointer;
+  color: var(--blue-dark);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all .15s;
+}
+.add-appt-btn:hover { background: var(--blue-mid); }
+
+/* ─── NAVIGATION BUTTONS ────────────────────────────── */
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+  gap: 12px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s;
+}
+.btn-outline {
+  background: white;
+  color: var(--blue);
+  border: 1.5px solid var(--blue);
+}
+.btn-outline:hover { background: var(--blue-light); }
+
+.btn-primary {
+  background: var(--blue);
+  color: white;
+}
+.btn-primary:hover { background: var(--blue-dark); }
+
+.btn svg { width: 15px; height: 15px; fill: currentColor; }
+
+/* ─── PRINT / PDF ────────────────────────────────────── */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  body { background: white; }
+  .sidebar { display: none; }
+  .main { padding: 0; max-width: 100%; }
+  .section-page { display: block !important; page-break-after: always; }
+  .nav-buttons { display: none; }
+  .add-appt-btn { display: none; }
+  .card { box-shadow: none; border: 1px solid #ccc; }
+  .page-header { margin-bottom: 16px; }
+
+  .logo-print {
+    display: flex !important;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--blue);
+  }
+  .logo-print-title { font-size: 20px; font-weight: 700; color: var(--blue-deep); }
+  .logo-print-sub { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* Force showing all form values in print */
+  input, textarea { border: none !important; outline: none !important; box-shadow: none !important; }
+}
+
+.logo-print { display: none; }
+
+/* ─── PROGRESS BAR ──────────────────────────────────── */
+.progress-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+}
+.pb-step {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+  transition: background .3s;
+}
+.pb-step.done { background: var(--blue); }
+.pb-step.active { background: var(--accent); }
+
+/* ─── TYPOLOGIES TABLE ──────────────────────────────── */
+.typo-table { width: 100%; border-collapse: collapse; }
+.typo-table th {
+  background: var(--blue-light);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--blue-dark);
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.typo-table td {
+  border: 1px solid var(--border);
+  padding: 0;
+}
+.typo-table td input {
+  width: 100%;
+  border: none;
+  padding: 8px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  outline: none;
+}
+.typo-table td input:focus { background: var(--blue-light); }
+
+/* ─── SPLIT ROW ─────────────────────────────────────── */
+.split-row {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+}
+.split-row:last-child { border-bottom: none; }
+.split-cell {
+  flex: 1;
+  border-right: 1px solid var(--border);
+  display: flex;
+  align-items: stretch;
+}
+.split-cell:last-child { border-right: none; }
+.split-cell .form-label {
+  width: 130px;
+  min-width: 130px;
+}
+
+/* ─── PHOTOS ─────────────────────────────────────────── */
+.photo-section {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+
+.photo-section-header {
+  background: var(--blue);
+  color: white;
+  padding: 11px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+.photo-section-header.dark { background: var(--blue-deep); }
+.photo-section-header svg { width: 18px; height: 18px; fill: white; opacity: 0.9; flex-shrink: 0; }
+
+.photo-section-body { padding: 14px; }
+
+.photo-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--blue-light);
+  border: 2px dashed var(--blue);
+  border-radius: 10px;
+  padding: 13px 18px;
+  width: 100%;
+  cursor: pointer;
+  color: var(--blue-dark);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  transition: background .15s;
+}
+.photo-add-btn:hover { background: var(--blue-mid); }
+.photo-add-btn svg { width: 20px; height: 20px; stroke: var(--blue); fill: none; stroke-width: 2; flex-shrink: 0; }
+.photo-add-btn input[type="file"] { display: none; }
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.photo-item {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1.5px solid var(--border);
+  background: var(--gray);
+  aspect-ratio: 4/3;
+  display: flex;
+  flex-direction: column;
+}
+
+.photo-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.photo-item-footer {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(13,63,94,0.85);
+  padding: 5px 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.photo-item-footer input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  outline: none;
+  width: 0;
+}
+.photo-item-footer input::placeholder { color: rgba(255,255,255,0.5); }
+
+.photo-del-btn {
+  background: rgba(231,76,60,0.85);
+  border: none;
+  border-radius: 5px;
+  color: white;
+  width: 20px; height: 20px;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.photo-empty {
+  text-align: center;
+  padding: 20px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* print: photos en grille 2 colonnes */
+@media print {
+  .photo-grid { grid-template-columns: 1fr 1fr; }
+  .photo-item { break-inside: avoid; }
+  .photo-del-btn { display: none; }
+  .photo-add-btn { display: none; }
+}
+
+/* ─── iOS / iPadOS SPECIFIC FIXES ───────────────────── */
+
+/* Prevent input zoom on iOS (font-size must be ≥16px) */
+input[type="text"],
+input[type="date"],
+input[type="number"],
+textarea,
+select {
+  font-size: 16px !important;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* iOS momentum scrolling */
+.main {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Safe area for notch/home bar (iPad Pro) */
+.sidebar {
+  padding-top: max(0px, env(safe-area-inset-top));
+  padding-bottom: max(0px, env(safe-area-inset-bottom));
+}
+
+.main {
+  padding-bottom: max(32px, calc(env(safe-area-inset-bottom) + 16px));
+}
+
+/* ─── iPAD LAYOUT (768px+) ───────────────────────────── */
+/* On iPad the sidebar is always visible, good as-is */
+
+/* Make tap targets bigger on touch devices */
+@media (pointer: coarse) {
+  .nav-item {
+    padding: 14px 20px;
+    min-height: 50px;
+  }
+  .opt-label {
+    padding: 8px 16px;
+    font-size: 14px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+  }
+  .etat-note input {
+    padding: 12px;
+    font-size: 14px;
+  }
+  .form-field input,
+  .mur-sub input {
+    padding: 10px 12px;
+    font-size: 15px;
+  }
+}
+
+/* ─── iPAD PORTRAIT (768–1024px) ─────────────────────── */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .sidebar { width: 230px; }
+  .main { padding: 24px 28px; }
+  .form-label { width: 170px; min-width: 170px; }
+}
+
+/* ─── iPAD PRO LANDSCAPE (1024px+) ───────────────────── */
+@media (min-width: 1025px) {
+  .sidebar { width: 260px; }
+  .main { padding: 32px 40px; max-width: 960px; }
+}
+
+/* ─── SMALL SCREEN FALLBACK (iPhone) ─────────────────── */
+@media (max-width: 767px) {
+  .app { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    min-height: auto;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 200;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 0 0 env(safe-area-inset-bottom);
+  }
+  .sidebar-logo { display: none; }
+  .sidebar-nav {
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+    flex: 1;
+    overflow-x: auto;
+  }
+  .nav-section-label { display: none; }
+  .nav-item {
+    flex-direction: column;
+    padding: 8px 10px;
+    font-size: 9px;
+    gap: 2px;
+    border-left: none;
+    border-top: 3px solid transparent;
+    min-width: 56px;
+    text-align: center;
+  }
+  .nav-item.active {
+    border-left: none;
+    border-top-color: var(--blue);
+  }
+  .nav-num { width: 18px; height: 18px; font-size: 9px; }
+  .sidebar-footer { display: none; }
+  .main {
+    padding: 16px 12px;
+    padding-bottom: calc(70px + env(safe-area-inset-bottom));
+  }
+  .form-label { width: 130px; min-width: 130px; font-size: 11px; }
+  .page-header h1 { font-size: 17px; }
+  .photo-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ─── iOS Safari specific scroll fix ─────────────────── */
+@supports (-webkit-touch-callout: none) {
+  .main { 
+    -webkit-overflow-scrolling: touch;
+    overflow-y: scroll;
+  }
+}
+
+
+/* ─── iOS SAFARI TOUCH FIXES ────────────────────────────────────────────── */
+* { -webkit-tap-highlight-color: rgba(0,0,0,0); }
+
+/* Force ALL clickable elements to register touch on iOS */
+.nav-item,
+.opt-item,
+.opt-label,
+.opt-item label,
+.etat-opt + label,
+.btn,
+.btn-pdf,
+.add-appt-btn,
+.photo-add-btn,
+.photo-del-btn,
+.appt-del,
+button,
+label,
+[onclick] {
+  cursor: pointer !important;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  touch-action: manipulation;
+}
+
+/* Fix checkbox/label on iOS: make label fill touch target */
+.opt-item {
+  display: inline-flex;
+  align-items: center;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.opt-item input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Bigger touch targets for iPad */
+@media (pointer: coarse) {
+  .opt-label {
+    padding: 10px 18px !important;
+    font-size: 14px !important;
+    min-height: 44px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+  .nav-item {
+    min-height: 52px !important;
+    padding: 14px 20px !important;
+  }
+  .etat-opt + label {
+    padding: 10px 18px !important;
+    min-height: 44px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+  .btn {
+    min-height: 52px !important;
+    padding: 14px 24px !important;
+    font-size: 15px !important;
+  }
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ─── SIDEBAR ─── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-box">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22" style="fill:rgba(255,255,255,0.4)"/></svg>
+      </div>
+      <div class="logo-text">
+        <strong>COPRODIAG</strong>
+        <span>Groupe Butagaz</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Dossier Visite</div>
+    <button class="nav-item active" id="nav-0" onclick="goTo(0)" type="button">
+      <span class="nav-num">1</span> Identification
+    </button>
+    <button class="nav-item" id="nav-1" onclick="goTo(1)" type="button">
+      <span class="nav-num">2</span> Chauffage Collectif
+    </button>
+    <button class="nav-item" id="nav-2" onclick="goTo(2)" type="button">
+      <span class="nav-num">3</span> Murs
+    </button>
+    <button class="nav-item" id="nav-3" onclick="goTo(3)" type="button">
+      <span class="nav-num">4</span> Planchers
+    </button>
+    <button class="nav-item" id="nav-4" onclick="goTo(4)" type="button">
+      <span class="nav-num">5</span> Parties Communes
+    </button>
+    <button class="nav-item" id="nav-5" onclick="goTo(5)" type="button">
+      <span class="nav-num">6</span> Appartements
+    </button>
+    <button class="nav-item" id="nav-6" onclick="goTo(6)" type="button">
+      <span class="nav-num">7</span> 📷 Photos
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="btn-pdf" onclick="generatePDF()" ontouchend="event.preventDefault();generatePDF()">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>
+      Générer le PDF
+    </button>
+  </div>
+</aside>
+
+<!-- ─── MAIN ─── -->
+<main class="main">
+
+  <div class="progress-bar" id="progressBar">
+    <div class="pb-step active" id="pb0"></div>
+    <div class="pb-step" id="pb1"></div>
+    <div class="pb-step" id="pb2"></div>
+    <div class="pb-step" id="pb3"></div>
+    <div class="pb-step" id="pb4"></div>
+    <div class="pb-step" id="pb5"></div>
+    <div class="pb-step" id="pb6"></div>
+  </div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 1 – IDENTIFICATION
+══════════════════════════════════════════════════════ -->
+<div class="section-page active" id="page-0">
+  <div class="page-header">
+    <div class="page-header-icon">
+      <svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+    </div>
+    <div>
+      <h1>Dossier Visite Thermique</h1>
+      <p>Identification de la résidence</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Informations Générales</div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-label">Nom résidence</div>
+        <div class="form-field"><input type="text" class="full" placeholder="Nom de la résidence…"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Adresse de la résidence</div>
+        <div class="form-field"><input type="text" class="full" placeholder="Adresse complète…"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Contact sur Place</div>
+        <div class="form-field" style="gap:16px;">
+          <input type="text" style="flex:1" placeholder="Nom du contact…">
+          <span style="font-size:12px;font-weight:600;color:var(--blue-dark);white-space:nowrap;">Date de la visite :</span>
+          <input type="date" style="width:160px">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Syndic</div>
+        <div class="form-field"><input type="text" class="full" placeholder="Nom du syndic…"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Type de diagnostic</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">DPE</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">DPE+PPPT</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">AE</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">DTG</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">DTG APC</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Caractéristiques du Bâtiment</div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-label">Année de construction</div>
+        <div class="form-field"><input type="number" style="width:140px" placeholder="ex. 1975" min="1800" max="2025"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Nombre de bâtiment / étages</div>
+        <div class="form-field" style="gap:16px;">
+          <span style="font-size:12px;color:var(--muted)">Bâtiments :</span>
+          <input type="number" style="width:80px" min="1">
+          <span style="font-size:12px;color:var(--muted)">Étages :</span>
+          <input type="number" style="width:80px" min="0">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Nombre de logement / bâtiment</div>
+        <div class="form-field"><input type="number" style="width:100px" min="1"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Remarques &amp; Typologies</div>
+    <div class="card-body" style="display:flex;gap:0">
+      <div style="flex:1;border-right:1px solid var(--border);padding:12px 16px;">
+        <textarea rows="8" placeholder="Remarques générales…" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:'DM Sans',sans-serif;font-size:13px;resize:vertical;outline:none;"></textarea>
+      </div>
+      <div style="flex:0 0 260px;">
+        <table class="typo-table">
+          <tr><th>Typologie</th><th>Surface (m²)</th></tr>
+          <tr><td style="padding:8px 14px;font-size:12px;font-weight:500;">Studio / T1</td><td><input type="number" placeholder="m²" min="0"></td></tr>
+          <tr><td style="padding:8px 14px;font-size:12px;font-weight:500;">T2</td><td><input type="number" placeholder="m²" min="0"></td></tr>
+          <tr><td style="padding:8px 14px;font-size:12px;font-weight:500;">T3</td><td><input type="number" placeholder="m²" min="0"></td></tr>
+          <tr><td style="padding:8px 14px;font-size:12px;font-weight:500;">T4</td><td><input type="number" placeholder="m²" min="0"></td></tr>
+          <tr><td style="padding:8px 14px;font-size:12px;font-weight:500;">T5</td><td><input type="number" placeholder="m²" min="0"></td></tr>
+          <tr><td style="padding:8px 14px;font-size:12px;font-weight:500;">T6</td><td><input type="number" placeholder="m²" min="0"></td></tr>
+          <tr><td style="padding:8px 14px;font-size:12px;font-weight:500;">T6+</td><td><input type="number" placeholder="m²" min="0"></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <div></div>
+    <button class="btn btn-primary" onclick="goTo(1)" ontouchend="event.preventDefault();goTo(1)">Chauffage Collectif <svg viewBox="0 0 24 24"><polyline points="9,18 15,12 9,6"/></svg></button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 2 – CHAUFFAGE COLLECTIF
+══════════════════════════════════════════════════════ -->
+<div class="section-page" id="page-1">
+  <div class="page-header">
+    <div class="page-header-icon">
+      <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    </div>
+    <div><h1>Chauffage Collectif</h1><p>Chaudières, ECS &amp; Émission</p></div>
+  </div>
+
+  <!-- Chaudières -->
+  <div class="card">
+    <div class="card-header">Chaudières</div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-label">Type de chaudière</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Condensation</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Basse température</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Standard</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Réseau urbain</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Énergie utilisée</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Gaz</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Fioul</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Bois</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Électrique</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Géothermie</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Mode de production</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Chauffage seul</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Chauffage et ECS</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">ECS seule</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Année d'installation</div>
+        <div class="form-field"><input type="number" style="width:140px" placeholder="ex. 2010"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Marque &amp; puissance</div>
+        <div class="form-field" style="gap:16px;">
+          <input type="text" style="flex:1" placeholder="Marque et puissance (kW)…">
+          <span style="font-size:12px;font-weight:600;color:var(--blue-dark);">Nombre :</span>
+          <input type="number" style="width:80px" min="1">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Priorité</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Cascade avec priorité</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Cascade sans priorité</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Sans objet</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Régulation centrale</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Oui</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ECS -->
+  <div class="card">
+    <div class="card-header alt">ECS – Eau Chaude Sanitaire</div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-label">Type de production</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Instantanée (pas de ballon)</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Semi-instantanée</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Stockage</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Volume du ballon</div>
+        <div class="form-field" style="gap:16px;">
+          <input type="number" style="width:120px" placeholder="litres">
+          <span style="font-size:12px;font-weight:600;color:var(--blue-dark);">Marque :</span>
+          <input type="text" style="flex:1" placeholder="Marque…">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Année d'installation</div>
+        <div class="form-field"><input type="number" style="width:140px" placeholder="ex. 2015"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Isolation calorifuge</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Absent</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Avant 1981</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">1981 – 2000</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Après 2000</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Émission -->
+  <div class="card">
+    <div class="card-header">Émission</div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-label">Type d'émetteur</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Émetteur soufflage</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Émetteur mural</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher rayonnant</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non répertorié</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Type de matériel</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Radiateur</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Ventilo-convecteur</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Fonctionnement</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Bitube</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Monotube</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Réseau isolé</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Absent</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Avant 1981</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">1981 – 2000</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Après 2000</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row tall">
+        <div class="form-label">Remarques complémentaires</div>
+        <div class="form-field"><textarea placeholder="Remarques chauffage collectif…"></textarea></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="btn btn-outline" onclick="goTo(0)" ontouchend="event.preventDefault();goTo(0)"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg> Retour</button>
+    <button class="btn btn-primary" onclick="goTo(2)" ontouchend="event.preventDefault();goTo(2)">Murs <svg viewBox="0 0 24 24"><polyline points="9,18 15,12 9,6"/></svg></button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 3 – MURS
+══════════════════════════════════════════════════════ -->
+<div class="section-page" id="page-2">
+  <div class="page-header">
+    <div class="page-header-icon">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/><line x1="15" y1="9" x2="15" y2="21"/></svg>
+    </div>
+    <div><h1>Murs</h1><p>Structure, isolation et doublage</p></div>
+  </div>
+
+  <!-- Mur 1 -->
+  <div class="card" id="mur-1-card">
+    <div class="card-header">Murs</div>
+    <div class="card-body">
+      <div class="mur-subheader">
+        Mur_1, emplacement :
+        <input type="text" placeholder="ex. Façade Nord…">
+        <div class="ep-box">Épaisseur : <input type="number" placeholder="cm" min="0"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Structure</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Briques pleines</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Briques creuses</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Blocs béton pleins</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Blocs béton creux</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Béton banché / préfa</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Béton de mâchefer</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pierre pleine</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pierre avec remplissage</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pans de bois</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Ossature bois</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Structure inconnue</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Isolation</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non isolé</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Intérieure</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Extérieure</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Information isolant</div>
+        <div class="form-field" style="flex-wrap:wrap;gap:10px;">
+          <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pas d'info</button>
+          <button class="opt-btn" onclick="toggleOpt(this)" type="button">Épaisseur connue</button>
+          <button class="opt-btn" onclick="toggleOpt(this)" type="button">Date d'installation</button>
+          <button class="opt-btn" onclick="toggleOpt(this)" type="button">Résistance connue</button>
+          <input type="text" placeholder="Valeur / précision…" style="border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;width:220px;outline:none;">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Présence doublage</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Lame d'air &gt; 15mm</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Lame d'air &lt; 15mm</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mur 2 -->
+      <div class="mur-subheader" style="margin-top:0;border-top:2px solid var(--blue-mid);">
+        Mur_2, emplacement :
+        <input type="text" placeholder="ex. Façade Sud…">
+        <div class="ep-box">Épaisseur : <input type="number" placeholder="cm" min="0"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Structure</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Briques pleines</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Briques creuses</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Blocs béton pleins</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Blocs béton creux</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Béton banché / préfa</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Béton de mâchefer</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pierre pleine</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pierre avec remplissage</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pans de bois</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Ossature bois</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Structure inconnue</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Isolation</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non isolé</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Intérieure</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Extérieure</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Information isolant</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pas d'info</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Épaisseur connue</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Date d'installation</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Résistance connue</button>
+            <input type="text" placeholder="Valeur / précision…" style="border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;width:220px;outline:none;">
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Présence doublage</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Lame d'air &gt; 15mm</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Lame d'air &lt; 15mm</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mur 3 -->
+      <div class="mur-subheader" style="margin-top:0;border-top:2px solid var(--blue-mid);">
+        Mur_3, emplacement :
+        <input type="text" placeholder="ex. Pignon Est…">
+        <div class="ep-box">Épaisseur : <input type="number" placeholder="cm" min="0"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Structure</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Briques pleines</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Briques creuses</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Blocs béton pleins</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Blocs béton creux</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Béton banché / préfa</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Béton de mâchefer</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pierre pleine</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pierre avec remplissage</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pans de bois</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Ossature bois</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Structure inconnue</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Isolation</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non isolé</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Intérieure</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Extérieure</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Information isolant</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pas d'info</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Épaisseur connue</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Date d'installation</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Résistance connue</button>
+            <input type="text" placeholder="Valeur / précision…" style="border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;width:220px;outline:none;">
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Présence doublage</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Lame d'air &gt; 15mm</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Lame d'air &lt; 15mm</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row tall">
+        <div class="form-label">Remarques complémentaires</div>
+        <div class="form-field"><textarea placeholder="État général, présence de dégradations, état des balcons, garde corps, travaux réalisés…"></textarea></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="btn btn-outline" onclick="goTo(1)" ontouchend="event.preventDefault();goTo(1)"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg> Retour</button>
+    <button class="btn btn-primary" onclick="goTo(3)" ontouchend="event.preventDefault();goTo(3)">Planchers <svg viewBox="0 0 24 24"><polyline points="9,18 15,12 9,6"/></svg></button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 4 – PLANCHERS
+══════════════════════════════════════════════════════ -->
+<div class="section-page" id="page-3">
+  <div class="page-header">
+    <div class="page-header-icon">
+      <svg viewBox="0 0 24 24"><polygon points="12,2 22,8 22,16 12,22 2,16 2,8"/></svg>
+    </div>
+    <div><h1>Planchers Hauts et Bas</h1><p>Structure et isolation des planchers</p></div>
+  </div>
+
+  <!-- Planchers hauts -->
+  <div class="card">
+    <div class="card-header">Planchers Hauts</div>
+    <div class="card-body">
+      <!-- PH1 -->
+      <div class="mur-subheader">
+        Planchers hauts_1, emplacement :
+        <input type="text" placeholder="ex. Toiture terrasse…">
+      </div>
+      <div class="form-row">
+        <div class="form-label">Structure</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plafond béton sur combles</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plafond bois sur combles</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Rampants de combles aménagés</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Toiture terrasse béton</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Toiture bac acier / zinc</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Structure inconnue</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Isolation</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non isolé</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Intérieure</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Extérieure</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Information isolant</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pas d'info</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Épaisseur connue</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Date d'installation</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Résistance connue</button>
+            <input type="text" placeholder="Valeur…" style="border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;width:200px;outline:none;">
+          </div>
+        </div>
+      </div>
+
+      <!-- PH2 -->
+      <div class="mur-subheader" style="border-top:2px solid var(--blue-mid);">
+        Planchers hauts_2, emplacement :
+        <input type="text" placeholder="ex. Combles perdus…">
+      </div>
+      <div class="form-row">
+        <div class="form-label">Structure</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plafond béton sur combles</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plafond bois sur combles</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Rampants de combles aménagés</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Toiture terrasse béton</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Toiture bac acier / zinc</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Structure inconnue</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Isolation</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non isolé</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Intérieure</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Extérieure</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Information isolant</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pas d'info</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Épaisseur connue</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Date d'installation</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Résistance connue</button>
+            <input type="text" placeholder="Valeur…" style="border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;width:200px;outline:none;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Planchers bas -->
+  <div class="card">
+    <div class="card-header alt">Planchers Bas</div>
+    <div class="card-body">
+      <!-- PB1 -->
+      <div class="mur-subheader">
+        Planchers bas_1, emplacement :
+        <input type="text" placeholder="ex. Plancher sur sous-sol…">
+      </div>
+      <div class="form-row">
+        <div class="form-label">Structure</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher / SS béton</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher / SS hourdis</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher / SS Voutains</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Planchers sur VS</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher sur terre plein</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher / extérieur</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Structure inconnue</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Isolation</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non isolé</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Intérieure</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Extérieure</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Information isolant</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pas d'info</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Épaisseur connue</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Date d'installation</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Résistance connue</button>
+            <input type="text" placeholder="Valeur…" style="border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;width:200px;outline:none;">
+          </div>
+        </div>
+      </div>
+
+      <!-- PB2 -->
+      <div class="mur-subheader" style="border-top:2px solid var(--blue-mid);">
+        Planchers bas_2, emplacement :
+        <input type="text" placeholder="ex. Plancher sur vide sanitaire…">
+      </div>
+      <div class="form-row">
+        <div class="form-label">Structure</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher / SS béton</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher / SS hourdis</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher / SS Voutains</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Planchers sur VS</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher sur terre plein</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher / extérieur</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Structure inconnue</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Isolation</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non isolé</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Intérieure</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Extérieure</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Information isolant</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pas d'info</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Épaisseur connue</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Date d'installation</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Résistance connue</button>
+            <input type="text" placeholder="Valeur…" style="border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;width:200px;outline:none;">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row tall">
+        <div class="form-label">Remarques complémentaires</div>
+        <div class="form-field"><textarea placeholder="État général, présence de dégradations, présence de protection, végétation, travaux réalisés…"></textarea></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="btn btn-outline" onclick="goTo(2)" ontouchend="event.preventDefault();goTo(2)"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg> Retour</button>
+    <button class="btn btn-primary" onclick="goTo(4)" ontouchend="event.preventDefault();goTo(4)">Parties Communes <svg viewBox="0 0 24 24"><polyline points="9,18 15,12 9,6"/></svg></button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 5 – PARTIES COMMUNES
+══════════════════════════════════════════════════════ -->
+<div class="section-page" id="page-4">
+  <div class="page-header">
+    <div class="page-header-icon">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+    </div>
+    <div><h1>Parties Communes</h1><p>Halls, cages d'escalier, sous-sols &amp; parkings</p></div>
+  </div>
+
+  <!-- Entrées / Halls -->
+  <div class="card">
+    <div class="card-header">Entrées / Halls d'entrée</div>
+    <div class="card-body">
+      <div class="form-row" style="min-height:auto;padding:12px 0;">
+        <div class="form-label" style="align-self:flex-start;padding-top:12px;">Menuiseries</div>
+        <div class="form-field" style="padding:8px;">
+          <table class="menu-table" style="width:100%">
+            <tr>
+              <th>Nom</th><th>SAS</th><th>Matériau</th><th>Vitrage</th><th>Largeur</th><th>Hauteur</th><th>Schéma</th>
+            </tr>
+            <tr><td><input type="text" placeholder="Porte hall"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:70px"></td><td><input type="text" style="width:70px"></td><td><input type="text"></td></tr>
+            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:70px"></td><td><input type="text" style="width:70px"></td><td><input type="text"></td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Chauffés</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Oui</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non</button>
+          </div>
+        </div>
+      </div>
+      <div class="etat-row"><div class="etat-label">Interphonie</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
+      <div class="etat-row"><div class="etat-label">Éclairage</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
+      <div class="etat-row"><div class="etat-label">Plans d'évacuation</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
+      <div class="etat-row"><div class="etat-label">Porte coupe-feu</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
+      <div class="etat-row"><div class="etat-label">Conservation</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
+    </div>
+  </div>
+
+  <!-- Cages escalier -->
+  <div class="card">
+    <div class="card-header alt">Cages Escalier / Palier</div>
+    <div class="card-body">
+      <div class="form-row" style="min-height:auto;padding:12px 0;">
+        <div class="form-label" style="align-self:flex-start;padding-top:12px;">Menuiseries</div>
+        <div class="form-field" style="padding:8px;">
+          <table class="menu-table" style="width:100%">
+            <tr><th>Nom</th><th>SAS</th><th>Matériau</th><th>Vitrage</th><th>Largeur</th><th>Hauteur</th><th>Schéma</th></tr>
+            <tr><td><input type="text" placeholder="Fenêtre palier"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:70px"></td><td><input type="text" style="width:70px"></td><td><input type="text"></td></tr>
+            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:70px"></td><td><input type="text" style="width:70px"></td><td><input type="text"></td></tr>
+            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:70px"></td><td><input type="text" style="width:70px"></td><td><input type="text"></td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="etat-row"><div class="etat-label">Éclairage</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
+      <div class="etat-row"><div class="etat-label">Câblage élec visible</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
+      <div class="etat-row"><div class="etat-label">Porte coupe-feu</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
+      <div class="etat-row"><div class="etat-label">Conservation paliers</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
+      <div class="etat-row"><div class="etat-label">Conservation cages</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
+      <div class="etat-row"><div class="etat-label">Désenfumage</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
+    </div>
+  </div>
+
+  <!-- Sous-sols -->
+  <div class="card">
+    <div class="card-header">Sous-sols / Caves</div>
+    <div class="card-body">
+      <div class="etat-row"><div class="etat-label">Éclairage</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
+      <div class="etat-row"><div class="etat-label">Câblage élec visible</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
+      <div class="etat-row"><div class="etat-label">Réseaux visibles</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
+      <div class="etat-row"><div class="etat-label">État général</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
+      <div class="etat-row"><div class="etat-label">Blocs secours</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
+      <div class="etat-row"><div class="etat-label">Locaux poubelles</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
+    </div>
+  </div>
+
+  <!-- Parkings -->
+  <div class="card">
+    <div class="card-header alt">Parkings</div>
+    <div class="card-body">
+      <div class="etat-row"><div class="etat-label">Éclairage</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
+      <div class="etat-row"><div class="etat-label">Réseaux visibles</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
+      <div class="etat-row"><div class="etat-label">État général</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
+      <div class="etat-row"><div class="etat-label">Extincteurs</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
+      <div class="etat-row"><div class="etat-label">Bac à sable</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="btn btn-outline" onclick="goTo(3)" ontouchend="event.preventDefault();goTo(3)"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg> Retour</button>
+    <button class="btn btn-primary" onclick="goTo(5)" ontouchend="event.preventDefault();goTo(5)">Appartements <svg viewBox="0 0 24 24"><polyline points="9,18 15,12 9,6"/></svg></button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 6 – APPARTEMENTS
+══════════════════════════════════════════════════════ -->
+<div class="section-page" id="page-5">
+  <div class="page-header">
+    <div class="page-header-icon">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+    </div>
+    <div><h1>Appartements</h1><p>Visite individuelle par logement</p></div>
+  </div>
+
+  <div id="appt-container"></div>
+
+  <button class="add-appt-btn" onclick="addAppartement()">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+    Ajouter un appartement
+  </button>
+
+  <div class="nav-buttons">
+    <button class="btn btn-outline" onclick="goTo(4)" ontouchend="event.preventDefault();goTo(4)"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg> Retour</button>
+    <button class="btn btn-primary" onclick="goTo(6)" ontouchend="event.preventDefault();goTo(6)">Photos <svg viewBox="0 0 24 24"><polyline points="9,18 15,12 9,6"/></svg></button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 7 – PHOTOS ENVELOPPE
+══════════════════════════════════════════════════════ -->
+<div class="section-page" id="page-6">
+  <div class="page-header">
+    <div class="page-header-icon">
+      <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+    </div>
+    <div><h1>Photos – Enveloppe du Bâtiment</h1><p>Joindre des photos par poste</p></div>
+  </div>
+
+  <!-- MENUISERIES -->
+  <div class="photo-section">
+    <div class="photo-section-header">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      Menuiseries (Fenêtres &amp; Portes)
+    </div>
+    <div class="photo-section-body">
+      <label class="photo-add-btn" onclick="triggerPhoto('photos-menuiseries')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        📷 Prendre une photo ou choisir depuis la galerie
+        <input type="file" id="photos-menuiseries" accept="image/*" multiple onchange="handlePhotos(this,'grid-menuiseries')">
+      </label>
+      <div class="photo-grid" id="grid-menuiseries">
+        <div class="photo-empty">Aucune photo ajoutée</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MURS FACADES -->
+  <div class="photo-section">
+    <div class="photo-section-header dark">
+      <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="2" y1="9" x2="22" y2="9"/><line x1="2" y1="15" x2="22" y2="15"/><line x1="8" y1="9" x2="8" y2="21"/><line x1="16" y1="9" x2="16" y2="21"/></svg>
+      Murs / Façades
+    </div>
+    <div class="photo-section-body">
+      <label class="photo-add-btn" onclick="triggerPhoto('photos-murs')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        📷 Prendre une photo ou choisir depuis la galerie
+        <input type="file" id="photos-murs" accept="image/*" multiple onchange="handlePhotos(this,'grid-murs')">
+      </label>
+      <div class="photo-grid" id="grid-murs">
+        <div class="photo-empty">Aucune photo ajoutée</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOITURE -->
+  <div class="photo-section">
+    <div class="photo-section-header">
+      <svg viewBox="0 0 24 24"><polygon points="12,2 22,12 2,12"/><rect x="4" y="12" width="16" height="10" rx="1"/></svg>
+      Toiture / Planchers Hauts
+    </div>
+    <div class="photo-section-body">
+      <label class="photo-add-btn" onclick="triggerPhoto('photos-toiture')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        📷 Prendre une photo ou choisir depuis la galerie
+        <input type="file" id="photos-toiture" accept="image/*" multiple onchange="handlePhotos(this,'grid-toiture')">
+      </label>
+      <div class="photo-grid" id="grid-toiture">
+        <div class="photo-empty">Aucune photo ajoutée</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLANCHERS BAS -->
+  <div class="photo-section">
+    <div class="photo-section-header dark">
+      <svg viewBox="0 0 24 24"><rect x="2" y="16" width="20" height="6" rx="1"/><line x1="6" y1="16" x2="6" y2="8"/><line x1="12" y1="16" x2="12" y2="8"/><line x1="18" y1="16" x2="18" y2="8"/><line x1="3" y1="8" x2="21" y2="8"/></svg>
+      Planchers Bas / Vide Sanitaire
+    </div>
+    <div class="photo-section-body">
+      <label class="photo-add-btn" onclick="triggerPhoto('photos-planchers')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        📷 Prendre une photo ou choisir depuis la galerie
+        <input type="file" id="photos-planchers" accept="image/*" multiple onchange="handlePhotos(this,'grid-planchers')">
+      </label>
+      <div class="photo-grid" id="grid-planchers">
+        <div class="photo-empty">Aucune photo ajoutée</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAUFFERIE -->
+  <div class="photo-section">
+    <div class="photo-section-header">
+      <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      Chaufferie / Local Technique
+    </div>
+    <div class="photo-section-body">
+      <label class="photo-add-btn" onclick="triggerPhoto('photos-chaufferie')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        📷 Prendre une photo ou choisir depuis la galerie
+        <input type="file" id="photos-chaufferie" accept="image/*" multiple onchange="handlePhotos(this,'grid-chaufferie')">
+      </label>
+      <div class="photo-grid" id="grid-chaufferie">
+        <div class="photo-empty">Aucune photo ajoutée</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PARTIES COMMUNES -->
+  <div class="photo-section">
+    <div class="photo-section-header dark">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      Parties Communes (Halls, Escaliers, Caves)
+    </div>
+    <div class="photo-section-body">
+      <label class="photo-add-btn" onclick="triggerPhoto('photos-communes')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        📷 Prendre une photo ou choisir depuis la galerie
+        <input type="file" id="photos-communes" accept="image/*" multiple onchange="handlePhotos(this,'grid-communes')">
+      </label>
+      <div class="photo-grid" id="grid-communes">
+        <div class="photo-empty">Aucune photo ajoutée</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PARKINGS / SOUS-SOLS -->
+  <div class="photo-section">
+    <div class="photo-section-header">
+      <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16,8 20,8 23,11 23,16 16,16 16,8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      Parkings / Sous-sols
+    </div>
+    <div class="photo-section-body">
+      <label class="photo-add-btn" onclick="triggerPhoto('photos-parking')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        📷 Prendre une photo ou choisir depuis la galerie
+        <input type="file" id="photos-parking" accept="image/*" multiple onchange="handlePhotos(this,'grid-parking')">
+      </label>
+      <div class="photo-grid" id="grid-parking">
+        <div class="photo-empty">Aucune photo ajoutée</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIVERS -->
+  <div class="photo-section">
+    <div class="photo-section-header dark">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Divers / Remarques visuelles
+    </div>
+    <div class="photo-section-body">
+      <label class="photo-add-btn" onclick="triggerPhoto('photos-divers')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        📷 Prendre une photo ou choisir depuis la galerie
+        <input type="file" id="photos-divers" accept="image/*" multiple onchange="handlePhotos(this,'grid-divers')">
+      </label>
+      <div class="photo-grid" id="grid-divers">
+        <div class="photo-empty">Aucune photo ajoutée</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="btn btn-outline" onclick="goTo(5)" ontouchend="event.preventDefault();goTo(5)"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg> Retour</button>
+    <button class="btn btn-primary" onclick="generatePDF()" ontouchend="event.preventDefault();generatePDF()">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+      Générer le PDF
+    </button>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+// ─── NAVIGATION ──────────────────────────────────────
+let currentPage = 0;
+const TOTAL = 7;
+
+function goTo(idx) {
+  document.querySelectorAll('.section-page').forEach(p => p.classList.remove('active'));
+  for(var i=0;i<7;i++){
+    var n=document.getElementById('nav-'+i);
+    if(n) n.classList.remove('active');
+  }
+  var page = document.getElementById('page-' + idx);
+  if(page) page.classList.add('active');
+  var nav = document.getElementById('nav-' + idx);
+  if(nav) nav.classList.add('active');
+  currentPage = idx;
+  updateProgress();
+  var mc = document.getElementById('mainContent') || document.querySelector('.main');
+  if(mc) mc.scrollTop = 0;
+  window.scrollTo(0,0);
+}
+
+function updateProgress() {
+  for (let i = 0; i < TOTAL; i++) {
+    const s = document.getElementById('pb' + i);
+    if (!s) continue;
+    if (i < currentPage) { s.className = 'pb-step done'; }
+    else if (i === currentPage) { s.className = 'pb-step active'; }
+    else { s.className = 'pb-step'; }
+  }
+}
+
+// ─── APPARTEMENTS ────────────────────────────────────
+let apptCount = 0;
+
+function addAppartement() {
+  apptCount++;
+  const id = apptCount;
+  const container = document.getElementById('appt-container');
+  const div = document.createElement('div');
+  div.className = 'appt-card';
+  div.id = 'appt-' + id;
+  div.innerHTML = `
+    <div class="appt-card-header">
+      Appartement n° <input type="text" placeholder="${id}" id="appt_nb_${id}">
+      <span style="font-size:11px;opacity:0.6;margin-left:auto;cursor:pointer;" onclick="removeAppt(${id})">✕ Supprimer</span>
+    </div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-label">Contact</div>
+        <div class="form-field" style="gap:16px;">
+          <input type="text" style="flex:1" placeholder="Nom du résident…">
+          <span style="font-size:12px;font-weight:600;color:var(--blue-dark)">Nbr pièces :</span>
+          <input type="number" style="width:70px" min="1">
+          <span style="font-size:12px;font-weight:600;color:var(--blue-dark)">Surface :</span>
+          <input type="number" style="width:80px" placeholder="m²">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Emplacement</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">RDC</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Étage intermédiaire</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Dernier</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Chauffage</div>
+        <div class="form-field" style="flex-direction:column;align-items:flex-start;gap:8px;">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Chaudière gaz</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Chauffage électrique</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Autre</button>
+            <input type="text" placeholder="Préciser…" style="border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:12px;width:140px;outline:none;">
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:12px;font-weight:600;color:var(--blue-dark)">Marque / Année :</span>
+            <input type="text" placeholder="ex. Saunier Duval / 2008" style="border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:12px;flex:1;outline:none;">
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Si gaz : émission</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Robinets simples</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Robinets thermostatiques</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Si élec : émission</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Convecteurs vétustes</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Convecteurs récents</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Panneaux rayonnants</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Radiateur inertie</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">ECS</div>
+        <div class="form-field" style="flex-direction:column;align-items:flex-start;gap:8px;">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Chauffe-eau gaz</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Ballon électrique</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Autre</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:12px;font-weight:600;color:var(--blue-dark)">Volume / Marque / Année :</span>
+            <input type="text" placeholder="ex. 100L / Atlantic / 2018" style="border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:12px;flex:1;outline:none;">
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Ventilation</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pas de ventil</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">VN</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">VMC auto</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">VMC Hygro A</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">VMC Hygro B</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Pathologies vues</div>
+        <div class="form-field">
+          <div class="opts">
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Humidité</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Fissures</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Odeurs</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Inconfort hiver</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Inconfort été</button>
+            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Infiltrations</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row" style="min-height:auto;padding:12px 0;">
+        <div class="form-label" style="align-self:flex-start;padding-top:12px;">Dimensions menuiseries</div>
+        <div class="form-field" style="padding:8px;">
+          <table class="menu-table" style="width:100%">
+            <tr><th>Nom</th><th>Matériau</th><th>Vitrage</th><th>Volet</th><th>Largeur</th><th>Hauteur</th><th>Schéma</th></tr>
+            <tr><td><input type="text" placeholder="Séjour"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:60px"></td><td><input type="text" style="width:60px"></td><td><input type="text"></td></tr>
+            <tr><td><input type="text" placeholder="Chambre 1"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:60px"></td><td><input type="text" style="width:60px"></td><td><input type="text"></td></tr>
+            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:60px"></td><td><input type="text" style="width:60px"></td><td><input type="text"></td></tr>
+            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:60px"></td><td><input type="text" style="width:60px"></td><td><input type="text"></td></tr>
+            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:60px"></td><td><input type="text" style="width:60px"></td><td><input type="text"></td></tr>
+            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:60px"></td><td><input type="text" style="width:60px"></td><td><input type="text"></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+  container.appendChild(div);
+}
+
+function removeAppt(id) {
+  const el = document.getElementById('appt-' + id);
+  if (el) el.remove();
+}
+
+// ─── PHOTOS ───────────────────────────────────────────
+// On iOS/Android, triggerPhoto() clicks the hidden file input
+// which opens the camera (capture="environment")
+function triggerPhoto(inputId) {
+  document.getElementById(inputId).click();
+}
+
+// Convert each selected file to a base64 img and inject into the grid
+function handlePhotos(input, gridId) {
+  const grid = document.getElementById(gridId);
+  // Remove empty placeholder if present
+  const empty = grid.querySelector('.photo-empty');
+  if (empty) empty.remove();
+
+  Array.from(input.files).forEach(file => {
+    if (!file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const uid = 'photo_' + Date.now() + '_' + Math.random().toString(36).substr(2,5);
+      const item = document.createElement('div');
+      item.className = 'photo-item';
+      item.id = uid;
+
+      // Get timestamp
+      const now = new Date();
+      const ts = now.toLocaleDateString('fr-FR') + ' ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'});
+
+      item.innerHTML = `
+        <img src="${e.target.result}" alt="Photo" loading="lazy">
+        <div class="photo-item-footer">
+          <input type="text" placeholder="Légende (ex: Façade Nord…)" value="${ts}">
+          <button class="photo-del-btn" onclick="deletePhoto('${uid}','${gridId}')" title="Supprimer">✕</button>
+        </div>
+      `;
+      grid.appendChild(item);
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Reset the input so the same photo can be re-selected
+  input.value = '';
+}
+
+function deletePhoto(uid, gridId) {
+  const el = document.getElementById(uid);
+  if (el) el.remove();
+  // If grid is now empty, restore placeholder
+  const grid = document.getElementById(gridId);
+  if (grid && grid.querySelectorAll('.photo-item').length === 0) {
+    grid.innerHTML = '<div class="photo-empty">Aucune photo ajoutée</div>';
+  }
+}
+
+// ─── PDF GENERATION ──────────────────────────────────
+function generatePDF() {
+  window.print();
+}
+
+
+
+// ─── OPT & ETAT BUTTON LOGIC (iOS safe) ─────────────────────────────────
+function toggleOpt(btn) {
+  btn.classList.toggle('selected');
+}
+
+function toggleEtat(btn) {
+  var parent = btn.parentElement;
+  var kind = btn.classList.contains('bon') ? 'bon' : 
+             btn.classList.contains('usage') ? 'usage' : 'mauvais';
+  // For etat, each color is independent toggle
+  btn.classList.toggle('selected');
+}
+
+// ─── iOS SAFARI CHECKBOX FIX ──────────────────────────────────────────────
+// On iOS, labels don't always toggle checkboxes — force it via JS
+document.addEventListener('DOMContentLoaded', function() {
+  // Make all opt-labels work on touch
+  document.querySelectorAll('.opt-label').forEach(function(label) {
+    label.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      var cb = this.previousElementSibling;
+      if (cb && cb.type === 'checkbox') {
+        cb.checked = !cb.checked;
+        // Trigger change event for any listeners
+        cb.dispatchEvent(new Event('change', {bubbles: true}));
+      }
+    });
+  });
+
+  // Fix etat labels (bon/usage/mauvais) on iOS
+  document.querySelectorAll('.etat-opt + label').forEach(function(label) {
+    label.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      var cb = this.previousElementSibling;
+      if (cb) {
+        cb.checked = !cb.checked;
+        cb.dispatchEvent(new Event('change', {bubbles: true}));
+      }
+    });
+  });
+  
+  // Fix navigation: ensure goTo works on touch
+  document.querySelectorAll('[onclick*="goTo"]').forEach(function(el) {
+    el.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      var fn = this.getAttribute('onclick');
+      if (fn) eval(fn);
+    });
+  });
+});
+
+// ─── iOS / iPAD DETECTION ────────────────────────────
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+              (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const isIPad = /iPad/.test(navigator.userAgent) || 
+               (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+// On iPad: offer choice camera/library via action sheet simulation
+// On iPhone: direct camera
+function triggerPhoto(inputId) {
+  const input = document.getElementById(inputId);
+  if (isIPad) {
+    // iPad: no capture attr = shows native picker (camera + library)
+    input.removeAttribute('capture');
+  } else if (isIOS) {
+    // iPhone: direct camera
+    input.setAttribute('capture', 'environment');
+  } else {
+    // Desktop/Android: remove capture to allow file picker
+    input.removeAttribute('capture');
+  }
+  input.click();
+}
+
+// Fix for iOS: prevent body scroll when sidebar is in use
+document.addEventListener('touchmove', function(e) {
+  if (e.target.closest('.sidebar')) e.preventDefault();
+}, { passive: false });
+
+// Fix iOS input date display
+document.querySelectorAll('input[type="date"]').forEach(inp => {
+  if (isIOS && !inp.value) {
+    inp.type = 'text';
+    inp.placeholder = 'JJ/MM/AAAA';
+  }
+});
+
+// ─── INIT ─────────────────────────────────────────────
+addAppartement();
+addAppartement();
+updateProgress();
+
+// Show install hint on iOS
+if (isIOS && !navigator.standalone) {
+  setTimeout(() => {
+    const hint = document.createElement('div');
+    hint.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#0d3f5e;color:white;padding:10px 18px;border-radius:20px;font-size:12px;font-weight:600;z-index:9999;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.3);max-width:280px;';
+    hint.innerHTML = '📲 Astuce : Appuyez sur <strong>Partager</strong> puis <strong>"Sur l'écran d'accueil"</strong> pour installer l'app';
+    document.body.appendChild(hint);
+    setTimeout(() => hint.remove(), 6000);
+  }, 2000);
+}
+</script>
+</body>
+</html>
