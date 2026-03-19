@@ -152,31 +152,25 @@ td input{width:100%;border:none;padding:8px 9px;font-size:14px;font-family:inher
 .nt.on{color:#fff;border-top-color:var(–b);}
 .nt .nn{width:18px;height:18px;font-size:9px;}
 
-/* ══ PRINT ══════════════════════════════════════════════════════════════════ */
+/* ══ PRINT A4 — DESIGN PROFESSIONNEL ════════════════════════════════════════ */
 @page {
 size: A4 portrait;
-margin: 15mm 12mm 15mm 12mm;
+margin: 12mm 14mm 12mm 14mm;
 }
+
 @media print {
-/* 1. COULEURS PRESERVEES */
 
-- {
-  -webkit-print-color-adjust: exact !important;
-  print-color-adjust: exact !important;
-  }
+- { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
-/* 2. CACHER UI */
+/* ── Masquer UI ── */
 .sb, .fab, .navb, .add-btn, .pbtn, .adel, .pdel, .prog,
-input[type=file] {
-display: none !important;
-}
+.iphone-tabs, input[type=file], .pmt { display: none !important; }
 
-/* 3. LAYOUT PRINT */
+/* ── Layout ── */
 .app { display: block !important; height: auto !important; overflow: visible !important; }
-.mn  { overflow: visible !important; height: auto !important; padding: 0 10px !important; }
+.mn  { overflow: visible !important; height: auto !important; padding: 0 !important; }
 
-/* 4. PAGES PRINCIPALES : 1 section = 1 page
-On utilise UNIQUEMENT page-break-before pour éviter les pages blanches */
+/* ── Chaque section = 1 page (sauf la 1ère) ── */
 .pg {
 display: block !important;
 visibility: visible !important;
@@ -184,357 +178,257 @@ height: auto !important;
 overflow: visible !important;
 page-break-before: always;
 break-before: always;
-page-break-after: avoid;   /* ← évite la page blanche après */
+page-break-after: avoid;
 break-after: avoid;
-padding: 12px 16px;
-orphans: 2;
-widows: 2;
+padding: 0;
 }
+#p0 { page-break-before: avoid !important; break-before: avoid !important; }
 
-/* Première page : pas de saut avant */
-#p0 {
-page-break-before: avoid !important;
-break-before: avoid !important;
-}
-
-/* 5. En-tête collé au contenu suivant */
+/* ── Entête de page collé au contenu ── */
 .ph {
 page-break-after: avoid !important;
 break-after: avoid !important;
-margin-bottom: 10px;
+display: flex !important;
+align-items: center;
+gap: 12px;
+background: #0d3f5e !important;
+color: white !important;
+padding: 12px 16px !important;
+margin: 0 0 12px 0 !important;
+border-radius: 0 !important;
 }
+.ph h2 { color: white !important; font-size: 15px !important; margin: 0 !important; }
+.ph p  { color: rgba(255,255,255,.7) !important; font-size: 11px !important; margin: 0 !important; }
+.phi {
+width: 32px !important; height: 32px !important;
+background: #0b9fd4 !important;
+border-radius: 8px !important;
+display: flex !important; align-items: center !important; justify-content: center !important;
+flex-shrink: 0 !important;
+}
+.phi svg { width: 16px !important; height: 16px !important; fill: white !important; }
 
-/* 6. Cards */
+/* ── Cards ── */
 .card {
 break-inside: avoid;
 page-break-inside: avoid;
-margin-bottom: 8px;
+margin-bottom: 8px !important;
+border: none !important;
+border-radius: 6px !important;
+overflow: hidden !important;
 box-shadow: none !important;
-border: 1px solid #ccc !important;
 }
 
-/* 7. APPARTEMENTS — chaque appartement sur sa propre page */
-#appt-list {
-display: block !important;
-}
-.ac {
-display: block !important;
-page-break-before: always !important;
-break-before: always !important;
+/* ── En-têtes de card ── */
+.ch {
+background: #0b9fd4 !important;
+color: white !important;
+font-size: 10px !important;
+font-weight: 800 !important;
+letter-spacing: 1px !important;
+padding: 6px 12px !important;
 page-break-after: avoid !important;
 break-after: avoid !important;
-page-break-inside: avoid !important;
-break-inside: avoid !important;
-box-shadow: none !important;
-border: 1px solid #ccc !important;
+}
+.ch.dk { background: #0d3f5e !important; }
+
+/* ── Champs ── */
+.fl { border-bottom: 1px solid #e8f4fb !important; }
+.fll {
+font-size: 9px !important;
+font-weight: 700 !important;
+color: #0d3f5e !important;
+background: #f0f8fc !important;
+padding: 4px 10px 3px !important;
+text-transform: uppercase !important;
+letter-spacing: .5px !important;
+border-bottom: 1px solid #d0e8f2 !important;
+page-break-after: avoid !important;
+break-after: avoid !important;
+}
+.flb { padding: 5px 10px !important; }
+
+/* ── Inputs visibles ── */
+input[type=text], input[type=date], input[type=number] {
+border: 1px solid #c8e0ec !important;
+border-radius: 4px !important;
+padding: 4px 7px !important;
+font-size: 12px !important;
+background: #f9fcff !important;
+color: #1a3a4c !important;
+}
+textarea {
+border: 1px solid #c8e0ec !important;
+border-radius: 4px !important;
+padding: 5px 7px !important;
+font-size: 12px !important;
+background: #f9fcff !important;
+color: #1a3a4c !important;
+min-height: 40px !important;
 }
 
-/* 8. PAGE 7 PHOTOS — chaque section = 1 feuille */
-#p6 {
-/* le pg lui-même n’a pas de padding excessif */
+/* ── Chips ── */
+.chip {
+border: 1.5px solid #b0d4e8 !important;
+border-radius: 14px !important;
+padding: 3px 10px !important;
+font-size: 11px !important;
+min-height: 24px !important;
+color: #3a6a84 !important;
+background: #f0f8fc !important;
+}
+.chip.on {
+background: #0b9fd4 !important;
+color: white !important;
+border-color: #0b9fd4 !important;
+font-weight: 600 !important;
+}
+
+/* ── Etat rows ── */
+.er { min-height: 32px !important; border-bottom: 1px solid #e8f4fb !important; }
+.el {
+width: 130px !important; min-width: 130px !important;
+font-size: 11px !important; font-weight: 600 !important;
+color: #0d3f5e !important;
+background: #f0f8fc !important;
+padding: 5px 8px !important;
+border-right: 1px solid #d0e8f2 !important;
+}
+.eb {
+padding: 3px 9px !important;
+font-size: 10px !important; font-weight: 700 !important;
+min-height: 24px !important;
+border-radius: 12px !important;
+border: 1.5px solid !important;
+}
+.eb.b { color: #27ae60 !important; border-color: #27ae60 !important; background: white !important; }
+.eb.b.on { background: #27ae60 !important; color: white !important; }
+.eb.u { color: #e07b00 !important; border-color: #e07b00 !important; background: white !important; }
+.eb.u.on { background: #f5a623 !important; color: white !important; }
+.eb.m { color: #c0392b !important; border-color: #c0392b !important; background: white !important; }
+.eb.m.on { background: #e74c3c !important; color: white !important; }
+.eb-wrap { padding: 4px 6px !important; gap: 4px !important; }
+.en input { font-size: 11px !important; color: #555 !important; border: none !important; background: transparent !important; }
+
+/* ── Mur subheader ── */
+.ms {
+background: #e4f4fb !important;
+border-top: 2px solid #0b9fd4 !important;
+border-bottom: 1px solid #d0e8f2 !important;
+padding: 5px 10px !important;
+font-size: 11px !important;
+font-weight: 700 !important;
+color: #0d3f5e !important;
+page-break-after: avoid !important;
+break-after: avoid !important;
+}
+.ms:first-child { border-top: none !important; }
+
+/* ── Tables ── */
+table { border-collapse: collapse !important; width: 100% !important; }
+th {
+background: #e4f4fb !important;
+color: #0d3f5e !important;
+font-size: 9px !important; font-weight: 700 !important;
+padding: 5px 7px !important;
+border: 1px solid #c0d8ea !important;
+text-transform: uppercase !important;
+}
+td { border: 1px solid #d8edf6 !important; }
+td input { font-size: 11px !important; padding: 4px 6px !important; color: #1a3a4c !important; }
+
+/* ── APPARTEMENTS — chaque appt = 1 page ── */
+#appt-list { display: block !important; }
+.ac {
+display: block !important;
+page-break-before: always !important; break-before: always !important;
+page-break-after: avoid !important; break-after: avoid !important;
+page-break-inside: avoid !important; break-inside: avoid !important;
+border: none !important; box-shadow: none !important;
+border-radius: 6px !important; overflow: hidden !important;
+}
+.ah {
+background: #0d3f5e !important;
+color: white !important;
+padding: 10px 14px !important;
+font-size: 13px !important; font-weight: 700 !important;
+page-break-after: avoid !important; break-after: avoid !important;
+border-radius: 6px 6px 0 0 !important;
+}
+.ah input {
+background: rgba(255,255,255,.2) !important;
+border: 1px solid rgba(255,255,255,.4) !important;
+color: white !important;
+font-weight: 700 !important; font-size: 13px !important;
+border-radius: 4px !important;
+padding: 2px 7px !important;
+}
+
+/* ── PAGE 7 PHOTOS ── */
+#p6 { padding: 0 !important; }
+#p6 > .ph { margin-bottom: 0 !important; }
+#photo-wrap { display: block !important; }
+
+.pc {
+display: block !important;
+page-break-before: always !important; break-before: always !important;
+page-break-after: avoid !important; break-after: avoid !important;
+page-break-inside: avoid !important; break-inside: avoid !important;
+margin: 0 !important;
+border: none !important; border-radius: 0 !important; box-shadow: none !important;
 padding: 0 !important;
 }
 
-/* La div intro de la page photos (le .ph) */
-#p6 > .ph {
-padding: 12px 16px !important;
-page-break-after: avoid !important;
-break-after: avoid !important;
-}
-
-#photo-wrap {
-display: block !important;
-}
-
-/* Chaque section photo = 1 page COMPLÈTE */
-.pc {
-display: block !important;
-page-break-before: always !important;
-break-before: always !important;
-page-break-after: avoid !important;
-break-after: avoid !important;
-page-break-inside: avoid !important;
-break-inside: avoid !important;
-padding: 16px 20px !important;
-border: none !important;
-border-radius: 0 !important;
-box-shadow: none !important;
-margin: 0 !important;
-min-height: 200px;
-}
-
-/* Titre de section photo */
 .pch {
-page-break-after: avoid !important;
-break-after: avoid !important;
-font-size: 14px !important;
-padding: 12px 16px !important;
-margin-bottom: 12px;
+font-size: 11px !important; font-weight: 800 !important;
+padding: 10px 16px !important;
+letter-spacing: .8px !important;
+margin-bottom: 0 !important;
+page-break-after: avoid !important; break-after: avoid !important;
 }
+.pch.a { background: #0b9fd4 !important; color: white !important; }
+.pch.b { background: #0d3f5e !important; color: white !important; }
 
-/* 9. CONTENU PHOTO */
-.pcb {
-display: block !important;
-}
+.pcb { padding: 12px 16px !important; }
 
 .pnl {
-font-size: 11px !important;
-font-weight: 700 !important;
-margin-bottom: 4px !important;
-text-transform: uppercase;
-letter-spacing: .4px;
+font-size: 9px !important; font-weight: 800 !important;
 color: #0d3f5e !important;
+text-transform: uppercase !important; letter-spacing: .8px !important;
+margin-bottom: 5px !important;
+page-break-after: avoid !important; break-after: avoid !important;
 }
 
 .pnote {
 display: block !important;
-border: 1px solid #bbb !important;
-background: #fff !important;
+border: 1px solid #c0d8ea !important;
+border-radius: 5px !important;
+background: #f9fcff !important;
 font-size: 12px !important;
 padding: 8px 10px !important;
-margin-bottom: 12px !important;
-min-height: 60px !important;
+margin-bottom: 14px !important;
+min-height: 55px !important;
 width: 100% !important;
 box-sizing: border-box !important;
-resize: none !important;
+color: #1a3a4c !important;
 }
 
-/* Grille photos 2 colonnes */
+/* Photos 2 colonnes */
 .pgrid {
 display: grid !important;
 grid-template-columns: 1fr 1fr !important;
 gap: 10px !important;
-margin-top: 8px !important;
 }
-
 .pitem {
-height: 220px !important;
+height: 200px !important;
 break-inside: avoid !important;
-page-break-inside: avoid !important;
-border: 1px solid #ccc !important;
+border: 1px solid #c0d8ea !important;
 border-radius: 6px !important;
 overflow: hidden !important;
 }
-
-.pitem img {
-width: 100% !important;
-height: 175px !important;
-object-fit: cover !important;
-display: block !important;
-}
-
-.pft {
-background: #eaf4f9 !important;
-padding: 4px 8px !important;
-display: flex !important;
-}
-
-.pft input {
-color: #1a3a4c !important;
-font-size: 11px !important;
-background: transparent !important;
-border: none !important;
-}
-
-/* Cacher “Aucune photo” en impression */
-.pmt { display: none !important; }
-
-/* 10. CHIPS COLORÉES */
-.chip.on {
-background: #0b9fd4 !important;
-color: #fff !important;
-border-color: #0b9fd4 !important;
-}
-.eb.b.on { background: #27ae60 !important; color: #fff !important; }
-.eb.u.on { background: #f5a623 !important; color: #fff !important; }
-.eb.m.on { background: #e74c3c !important; color: #fff !important; }
-
-/* 11. TYPOGRAPHIES PRINT */
-.ch  { font-size: 11px !important; padding: 8px 12px !important; }
-.fll { font-size: 10px !important; padding: 5px 12px 2px !important; }
-.chip { font-size: 12px !important; padding: 5px 12px !important; min-height: 32px !important; }
-.el  { font-size: 11px !important; width: 130px !important; min-width: 130px !important; }
-.eb  { font-size: 11px !important; padding: 5px 10px !important; min-height: 30px !important; }
-}
-
-/* ══ iPHONE LAYOUT ══════════════════════════════════════════════════════════ */
-
-/* Force mobile layout always on iPhone */
-.app {
-flex-direction: column !important;
-height: 100vh !important;
-height: 100dvh !important;
-}
-
-/* Hide desktop sidebar completely */
-.sb {
-display: none !important;
-}
-
-/* Show tab bar */
-.iphone-tabs {
-display: flex !important;
-position: fixed;
-bottom: 0;
-left: 0;
-right: 0;
-background: #0d3f5e;
-padding-bottom: env(safe-area-inset-bottom);
-z-index: 200;
-box-shadow: 0 -2px 12px rgba(0,0,0,.25);
-overflow-x: auto;
--webkit-overflow-scrolling: touch;
-scrollbar-width: none;
-}
-.iphone-tabs::-webkit-scrollbar { display: none; }
-
-.it {
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-min-width: 52px;
-flex: 1;
-padding: 8px 4px 6px;
-background: transparent;
-border: none;
-border-top: 2px solid transparent;
-color: rgba(255,255,255,.55);
-font-family: -apple-system, ‘DM Sans’, sans-serif;
-font-size: 9px;
-font-weight: 600;
-text-transform: uppercase;
-letter-spacing: .3px;
-cursor: pointer;
-touch-action: manipulation;
--webkit-appearance: none;
-outline: none;
-gap: 3px;
--webkit-tap-highlight-color: transparent;
-transition: color .15s;
-}
-.it.on { color: #fff; border-top-color: #0b9fd4; }
-.it .nn {
-width: 20px; height: 20px;
-border-radius: 50%;
-background: rgba(255,255,255,.12);
-display: flex; align-items: center; justify-content: center;
-font-size: 9px; font-weight: 700;
-}
-.it.on .nn { background: #0b9fd4; }
-
-/* PDF button in tab bar */
-.it-pdf {
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-min-width: 44px;
-padding: 6px 8px;
-background: #0b9fd4;
-border: none;
-border-radius: 0;
-color: #fff;
-font-size: 18px;
-cursor: pointer;
-touch-action: manipulation;
--webkit-appearance: none;
-outline: none;
--webkit-tap-highlight-color: transparent;
-}
-
-/* Main content: full width, scrollable, bottom padding for tab bar */
-.mn {
-flex: 1;
-width: 100%;
-overflow-y: auto;
--webkit-overflow-scrolling: touch;
-padding: 14px 12px calc(70px + env(safe-area-inset-bottom)) 12px !important;
-}
-
-/* FAB hidden on iPhone (PDF in tab bar) */
-.fab { display: none !important; }
-
-/* Compact page header */
-.ph { margin-bottom: 12px !important; }
-.ph h2 { font-size: 16px !important; }
-.ph p { font-size: 11px !important; }
-.phi { width: 34px !important; height: 34px !important; border-radius: 8px !important; }
-.phi svg { width: 17px !important; height: 17px !important; }
-
-/* Cards */
-.card { margin-bottom: 10px !important; border-radius: 10px !important; }
-.ch { font-size: 11px !important; padding: 8px 12px !important; }
-
-/* Fields */
-.fll { font-size: 11px !important; padding: 6px 12px 3px !important; }
-.flb { padding: 8px 12px !important; }
-
-/* Chips: bigger tap targets */
-.chips { gap: 6px !important; padding: 8px 12px !important; }
-.chip {
-padding: 9px 14px !important;
-font-size: 13px !important;
-min-height: 42px !important;
-}
-
-/* Etat rows */
-.er { min-height: 44px !important; }
-.el {
-width: 120px !important;
-min-width: 120px !important;
-font-size: 11px !important;
-padding: 6px 8px !important;
-}
-.eb {
-padding: 7px 11px !important;
-font-size: 11px !important;
-min-height: 36px !important;
-}
-.eb-wrap { padding: 4px 6px !important; gap: 4px !important; }
-
-/* Inputs */
-input[type=text],input[type=date],input[type=number],textarea {
-font-size: 16px !important;
-}
-
-/* Nav buttons */
-.navb { margin-top: 16px !important; }
-.btn-b, .btn-n {
-padding: 13px 18px !important;
-font-size: 14px !important;
-min-height: 50px !important;
-}
-
-/* Appt */
-.ah { padding: 10px 12px !important; font-size: 12px !important; }
-.ah input { width: 60px !important; }
-.adel { font-size: 11px !important; padding: 4px 10px !important; }
-.add-btn { padding: 14px !important; font-size: 13px !important; }
-
-/* Photo */
-.pch { font-size: 11px !important; padding: 8px 12px !important; }
-.pcb { padding: 10px 12px !important; }
-.pnl { font-size: 10px !important; }
-.pbtn { padding: 12px 14px !important; font-size: 13px !important; min-height: 46px !important; }
-.pnote { font-size: 15px !important; min-height: 60px !important; }
-.pgrid { grid-template-columns: repeat(2, 1fr) !important; gap: 6px !important; }
-
-/* Mur subheader */
-.ms { padding: 7px 12px !important; font-size: 11px !important; gap: 6px !important; }
-.ms input { min-width: 100px !important; font-size: 14px !important; }
-.ms .ep input { width: 60px !important; }
-
-/* Progress bar compact */
-.prog { gap: 3px !important; margin-bottom: 14px !important; }
-.ps { height: 3px !important; }
-
-/* Table scrollable */
-.tw { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
-td input { font-size: 14px !important; padding: 7px 8px !important; }
-
-@media print {
-.iphone-tabs { display: none !important; }
+.pitem img { width: 100% !important; height: 165px !important; object-fit: cover !important; display: block !important; }
+.pft { background: #e4f4fb !important; padding: 4px 8px !important; display: flex !important; }
+.pft input { color: #0d3f5e !important; font-size: 10px !important; font-weight: 500 !important; background: transparent !important; border: none !important; }
 }
 
 </style>
