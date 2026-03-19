@@ -1,903 +1,540 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Coprodiag DVT">
+<meta name="apple-mobile-web-app-title" content="Coprodiag">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0d3f5e">
-<meta name="format-detection" content="telephone=no">
-<title>Dossier Visite Thermique – Coprodiag</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Coprodiag – iPhone</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --blue: #0b9fd4;
-  --blue-dark: #0a7faa;
-  --blue-deep: #0d3f5e;
-  --blue-light: #e4f4fb;
-  --blue-mid: #c2e8f5;
-  --accent: #f5a623;
-  --green: #27ae60;
-  --red: #e74c3c;
-  --gray: #f5f7fa;
-  --border: #d0e8f2;
-  --text: #1a3a4c;
-  --muted: #7a9bac;
-  --white: #ffffff;
-  --shadow: 0 2px 16px rgba(11,159,212,0.10);
+:root{--b:#0b9fd4;--bd:#0d3f5e;--bl:#e4f4fb;--g:#27ae60;--o:#f5a623;--r:#e74c3c;--br:#d0e8f2;--bg:#f5f7fa;--tx:#1a3a4c;--mu:#7a9bac;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;font-family:'DM Sans',-apple-system,sans-serif;color:var(--tx);background:#eaf4f9;}
+.app{display:flex;height:100vh;height:100dvh;overflow:hidden;}
+
+/* SIDEBAR */
+.sb{width:210px;flex-shrink:0;background:var(–bd);display:flex;flex-direction:column;height:100%;overflow-y:auto;}
+.sb-logo{padding:16px 14px;border-bottom:1px solid rgba(255,255,255,.1);}
+.sb-logo b{display:block;color:#fff;font-size:14px;font-weight:700;}
+.sb-logo small{color:rgba(255,255,255,.4);font-size:10px;text-transform:uppercase;letter-spacing:1px;}
+.nb{display:flex;flex-direction:column;flex:1;}
+.n{display:flex;align-items:center;gap:10px;width:100%;padding:13px 14px;background:transparent;border:none;border-left:3px solid transparent;color:rgba(255,255,255,.6);font-family:inherit;font-size:13px;font-weight:500;text-align:left;cursor:pointer;touch-action:manipulation;-webkit-appearance:none;outline:none;transition:background .15s;}
+.n:active{background:rgba(255,255,255,.1);}
+.n.on{background:rgba(11,159,212,.22);border-left-color:var(–b);color:#fff;}
+.nn{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:rgba(255,255,255,.7);flex-shrink:0;}
+.n.on .nn{background:var(–b);color:#fff;}
+.sb-pdf{margin:10px 12px 14px;padding:12px;border-radius:8px;background:var(–b);color:#fff;border:none;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;touch-action:manipulation;-webkit-appearance:none;outline:none;width:calc(100% - 24px);}
+
+/* MAIN */
+.mn{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 20px;}
+
+/* PROGRESS */
+.prog{display:flex;gap:4px;margin-bottom:18px;}
+.ps{flex:1;height:4px;border-radius:2px;background:var(–br);transition:background .3s;}
+.ps.d{background:var(–b);}
+.ps.c{background:var(–o);}
+
+/* PAGE */
+.pg{display:none;}
+.pg.on{display:block;}
+
+/* PAGE HEADER */
+.ph{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.phi{width:38px;height:38px;background:var(–b);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.phi svg{width:19px;height:19px;fill:white;}
+.ph h2{font-size:18px;font-weight:700;color:var(–bd);}
+.ph p{font-size:12px;color:var(–mu);}
+
+/* CARD */
+.card{background:#fff;border-radius:12px;border:1px solid var(–br);overflow:hidden;margin-bottom:14px;box-shadow:0 1px 8px rgba(11,159,212,.07);}
+.ch{background:var(–b);color:#fff;padding:9px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;}
+.ch.dk{background:var(–bd);}
+
+/* FIELD */
+.fl{border-bottom:1px solid var(–br);}
+.fl:last-child{border-bottom:none;}
+.fll{font-size:11px;font-weight:600;color:var(–bd);padding:7px 13px 3px;background:var(–bg);border-bottom:1px solid var(–br);text-transform:uppercase;letter-spacing:.4px;}
+.flb{padding:10px 13px;}
+input[type=text],input[type=date],input[type=number],textarea,select{font-family:inherit;font-size:16px;color:var(–tx);border:1.5px solid var(–br);border-radius:8px;padding:10px 12px;background:#fff;width:100%;outline:none;-webkit-appearance:none;appearance:none;transition:border-color .15s;}
+input:focus,textarea:focus{border-color:var(–b);}
+textarea{min-height:72px;resize:vertical;}
+.r2{display:flex;gap:8px;}
+.r2>*{flex:1;}
+
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:7px;padding:10px 13px;}
+.chip{padding:8px 15px;border-radius:20px;border:1.5px solid var(–br);background:#fff;font-family:inherit;font-size:13px;font-weight:500;color:var(–tx);cursor:pointer;touch-action:manipulation;-webkit-appearance:none;outline:none;transition:all .15s;min-height:40px;display:inline-flex;align-items:center;}
+.chip.on{background:var(–b);color:#fff;border-color:var(–b);}
+
+/* ETAT */
+.er{display:flex;align-items:center;border-bottom:1px solid var(–br);min-height:46px;}
+.er:last-child{border-bottom:none;}
+.el{width:150px;min-width:150px;background:var(–bg);padding:8px 12px;font-size:12px;font-weight:600;color:var(–bd);border-right:1px solid var(–br);align-self:stretch;display:flex;align-items:center;}
+.eb-wrap{display:flex;gap:5px;padding:5px 8px;flex-wrap:wrap;}
+.eb{padding:7px 13px;border-radius:20px;border:1.5px solid;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;touch-action:manipulation;-webkit-appearance:none;outline:none;min-height:38px;display:inline-flex;align-items:center;background:#fff;transition:all .13s;}
+.eb.b{color:var(–g);border-color:var(–g);}
+.eb.b.on{background:var(–g);color:#fff;}
+.eb.u{color:var(–o);border-color:var(–o);}
+.eb.u.on{background:var(–o);color:#fff;}
+.eb.m{color:var(–r);border-color:var(–r);}
+.eb.m.on{background:var(–r);color:#fff;}
+.en{flex:1;}
+.en input{border:none;border-left:1px solid var(–br);padding:9px 11px;font-size:13px;font-family:inherit;background:transparent;width:100%;outline:none;-webkit-appearance:none;}
+
+/* MUR SUBHEADER */
+.ms{background:var(–bl);padding:8px 13px;font-size:12px;font-weight:700;color:var(–bd);border-top:2px solid var(–br);border-bottom:1px solid var(–br);display:flex;flex-wrap:wrap;align-items:center;gap:8px;}
+.ms:first-child{border-top:none;}
+.ms input{border:1px solid var(–br);border-radius:5px;padding:3px 8px;font-size:13px;background:#fff;min-width:120px;flex:1;}
+.ms .ep{display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.ms .ep input{min-width:60px;flex:none;width:70px;}
+
+/* TABLE */
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+table{border-collapse:collapse;width:100%;min-width:420px;}
+th{background:var(–bl);font-size:10px;font-weight:700;color:var(–bd);padding:8px 9px;border:1px solid var(–br);text-transform:uppercase;white-space:nowrap;}
+td{border:1px solid var(–br);}
+td input{width:100%;border:none;padding:8px 9px;font-size:14px;font-family:inherit;background:transparent;-webkit-appearance:none;outline:none;}
+
+/* APPT */
+.ac{background:#fff;border:1px solid var(–br);border-radius:12px;overflow:hidden;margin-bottom:14px;}
+.ah{background:var(–bd);color:#fff;padding:11px 14px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;}
+.ah input{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:6px;color:#fff;padding:3px 9px;font-size:13px;font-weight:700;width:70px;-webkit-appearance:none;}
+.adel{margin-left:auto;background:rgba(231,76,60,.8);border:none;border-radius:6px;color:#fff;padding:5px 11px;font-size:12px;cursor:pointer;font-family:inherit;touch-action:manipulation;-webkit-appearance:none;min-height:32px;}
+.add-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(–bl);border:2px dashed var(–b);border-radius:12px;padding:16px;width:100%;cursor:pointer;color:var(–bd);font-family:inherit;font-size:14px;font-weight:600;margin-bottom:16px;touch-action:manipulation;-webkit-appearance:none;outline:none;min-height:52px;}
+
+/* PHOTO */
+.pc{background:#fff;border-radius:12px;border:1px solid var(–br);overflow:hidden;margin-bottom:14px;}
+.pch{padding:10px 14px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;display:flex;align-items:center;gap:8px;}
+.pch svg{width:15px;height:15px;fill:white;flex-shrink:0;}
+.pch.a{background:var(–b);color:#fff;}
+.pch.b{background:var(–bd);color:#fff;}
+.pcb{padding:12px 14px;}
+.pnl{font-size:11px;font-weight:700;color:var(–bd);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px;}
+.pnote{width:100%;min-height:68px;resize:vertical;font-family:inherit;font-size:15px;color:var(–tx);border:1.5px solid var(–br);border-radius:8px;padding:9px 12px;background:#fff;outline:none;-webkit-appearance:none;margin-bottom:10px;display:block;}
+.pnote:focus{border-color:var(–b);}
+.pbtn{display:flex;align-items:center;gap:8px;background:var(–bl);border:2px dashed var(–b);border-radius:10px;padding:13px 16px;width:100%;cursor:pointer;color:var(–bd);font-family:inherit;font-size:14px;font-weight:600;margin-bottom:10px;touch-action:manipulation;-webkit-appearance:none;outline:none;min-height:48px;}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;}
+.pitem{position:relative;border-radius:8px;overflow:hidden;border:1px solid var(–br);aspect-ratio:4/3;}
+.pitem img{width:100%;height:100%;object-fit:cover;display:block;}
+.pft{position:absolute;bottom:0;left:0;right:0;background:rgba(13,63,94,.85);padding:4px 7px;display:flex;align-items:center;gap:4px;}
+.pft input{flex:1;background:transparent;border:none;color:#fff;font-size:11px;font-family:inherit;padding:2px 0;outline:none;-webkit-appearance:none;width:0;}
+.pft input::placeholder{color:rgba(255,255,255,.5);}
+.pdel{background:rgba(231,76,60,.85);border:none;border-radius:4px;color:#fff;width:19px;height:19px;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;touch-action:manipulation;}
+.pmt{text-align:center;padding:16px;color:var(–mu);font-size:13px;}
+
+/* NAV BUTTONS */
+.navb{display:flex;justify-content:space-between;margin-top:20px;gap:12px;}
+.btn-b,.btn-n{display:inline-flex;align-items:center;gap:6px;padding:12px 22px;border-radius:8px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;touch-action:manipulation;-webkit-appearance:none;outline:none;min-height:48px;border:none;}
+.btn-b{background:#fff;color:var(–b);border:1.5px solid var(–b);}
+.btn-b:active{background:var(–bl);}
+.btn-n{background:var(–b);color:#fff;}
+.btn-n:active{background:#0a7faa;}
+
+/* FAB */
+.fab{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));right:16px;width:54px;height:54px;border-radius:50%;background:var(–b);color:#fff;border:none;font-size:22px;cursor:pointer;touch-action:manipulation;-webkit-appearance:none;outline:none;box-shadow:0 4px 16px rgba(11,159,212,.5);display:flex;align-items:center;justify-content:center;z-index:200;}
+.fab:active{background:#0a7faa;transform:scale(.95);}
+
+/* MOBILE TAB BAR */
+@media(max-width:700px){
+.sb{position:fixed;bottom:0;left:0;right:0;width:100%;height:auto;flex-direction:row;overflow-x:auto;z-index:100;padding-bottom:env(safe-area-inset-bottom);}
+.sb-logo,.sb-pdf,.nb{display:none;}
+.tabs{display:flex!important;}
+.mn{padding:14px;padding-bottom:calc(72px + env(safe-area-inset-bottom));}
+.fab{bottom:calc(70px + env(safe-area-inset-bottom));}
+}
+.tabs{display:none;flex-direction:row;width:100%;}
+.nt{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7px 4px;background:transparent;border:none;border-top:2px solid transparent;color:rgba(255,255,255,.6);font-family:inherit;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;cursor:pointer;touch-action:manipulation;-webkit-appearance:none;outline:none;min-width:46px;flex:1;gap:2px;}
+.nt.on{color:#fff;border-top-color:var(–b);}
+.nt .nn{width:18px;height:18px;font-size:9px;}
+
+/* ══ PRINT ══════════════════════════════════════════════════════════════════ */
+@page {
+size: A4 portrait;
+margin: 15mm 12mm 15mm 12mm;
+}
+@media print {
+/* 1. COULEURS PRESERVEES */
+
+- {
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+  }
+
+/* 2. CACHER UI */
+.sb, .fab, .navb, .add-btn, .pbtn, .adel, .pdel, .prog,
+input[type=file] {
+display: none !important;
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* 3. LAYOUT PRINT */
+.app { display: block !important; height: auto !important; overflow: visible !important; }
+.mn  { overflow: visible !important; height: auto !important; padding: 0 10px !important; }
 
-body {
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #eaf4f9;
-  color: var(--text);
-  min-height: 100vh;
-  -webkit-text-size-adjust: 100%;
-  -webkit-tap-highlight-color: transparent;
-  overscroll-behavior: none;
+/* 4. PAGES PRINCIPALES : 1 section = 1 page
+On utilise UNIQUEMENT page-break-before pour éviter les pages blanches */
+.pg {
+display: block !important;
+visibility: visible !important;
+height: auto !important;
+overflow: visible !important;
+page-break-before: always;
+break-before: always;
+page-break-after: avoid;   /* ← évite la page blanche après */
+break-after: avoid;
+padding: 12px 16px;
+orphans: 2;
+widows: 2;
 }
 
-/* ─── APP SHELL ─────────────────────────────────────── */
-.app { display: flex; min-height: 100vh; }
-
-/* ─── SIDEBAR ────────────────────────────────────────── */
-.sidebar {
-  width: 260px;
-  min-height: 100vh;
-  background: var(--blue-deep);
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow-y: auto;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
+/* Première page : pas de saut avant */
+#p0 {
+page-break-before: avoid !important;
+break-before: avoid !important;
 }
 
-.sidebar-logo {
-  padding: 24px 20px 18px;
-  border-bottom: 1px solid rgba(255,255,255,0.10);
+/* 5. En-tête collé au contenu suivant */
+.ph {
+page-break-after: avoid !important;
+break-after: avoid !important;
+margin-bottom: 10px;
 }
 
-.logo-box {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.logo-icon {
-  width: 42px;
-  height: 42px;
-  background: var(--blue);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.logo-icon svg { width: 24px; height: 24px; fill: white; }
-
-.logo-text { line-height: 1.2; }
-.logo-text strong { display: block; color: white; font-size: 15px; font-weight: 700; letter-spacing: 0.3px; }
-.logo-text span { color: rgba(255,255,255,0.5); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
-
-.sidebar-nav { padding: 12px 0; flex: 1; }
-
-.nav-section-label {
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: rgba(255,255,255,0.35);
-  padding: 16px 20px 6px;
-}
-
-
-/* ─── NAV ITEM AS BUTTON ─────────────────────────────────────────────────*/
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 20px;
-  cursor: pointer;
-  transition: all .15s;
-  border-left: 3px solid transparent;
-  color: rgba(255,255,255,0.65);
-  font-size: 13px;
-  font-weight: 500;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  background: transparent;
-  border-top: none;
-  border-right: none;
-  border-bottom: none;
-  width: 100%;
-  text-align: left;
-  font-family: 'DM Sans', sans-serif;
-  -webkit-appearance: none;
-  outline: none;
-  min-height: 48px;
-}
-.nav-item:hover { background: rgba(255,255,255,0.07); color: white; }
-.nav-item.active { background: rgba(11,159,212,0.22); border-left-color: var(--blue); color: white; }
-.nav-item .nav-num {
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.12);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px; font-weight: 700; flex-shrink: 0;
-  color: rgba(255,255,255,0.7);
-}
-.nav-item.active .nav-num { background: var(--blue); color: white; }
-
-
-.sidebar-footer {
-  padding: 16px 20px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-}
-
-.btn-pdf {
-  width: 100%;
-  background: var(--blue);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 11px 16px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: background .15s;
-}
-.btn-pdf:hover { background: var(--blue-dark); }
-.btn-pdf svg { width: 16px; height: 16px; fill: white; flex-shrink: 0; }
-
-/* ─── MAIN CONTENT ──────────────────────────────────── */
-.main { flex: 1; padding: 32px 40px; max-width: 960px; }
-
-.section-page { display: none; }
-.section-page.active { display: block; }
-
-/* ─── PAGE HEADER ───────────────────────────────────── */
-.page-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 28px;
-}
-
-.page-header-icon {
-  width: 44px; height: 44px;
-  background: var(--blue);
-  border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-.page-header-icon svg { width: 22px; height: 22px; fill: white; }
-
-.page-header h1 { font-size: 22px; font-weight: 700; color: var(--blue-deep); }
-.page-header p { font-size: 13px; color: var(--muted); margin-top: 2px; }
-
-/* ─── CARD ──────────────────────────────────────────── */
+/* 6. Cards */
 .card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  margin-bottom: 20px;
-  border: 1px solid var(--border);
+break-inside: avoid;
+page-break-inside: avoid;
+margin-bottom: 8px;
+box-shadow: none !important;
+border: 1px solid #ccc !important;
 }
 
-.card-header {
-  background: var(--blue);
-  color: white;
-  padding: 10px 20px;
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
+/* 7. APPARTEMENTS — chaque appartement sur sa propre page */
+#appt-list {
+display: block !important;
+}
+.ac {
+display: block !important;
+page-break-before: always !important;
+break-before: always !important;
+page-break-after: avoid !important;
+break-after: avoid !important;
+page-break-inside: avoid !important;
+break-inside: avoid !important;
+box-shadow: none !important;
+border: 1px solid #ccc !important;
 }
 
-.card-header.alt { background: var(--blue-deep); }
-.card-header.sub {
-  background: var(--blue-light);
-  color: var(--blue-dark);
-  font-size: 12px;
+/* 8. PAGE 7 PHOTOS — chaque section = 1 feuille */
+#p6 {
+/* le pg lui-même n’a pas de padding excessif */
+padding: 0 !important;
 }
 
-.card-body { padding: 0; }
-
-/* ─── FORM ROWS ─────────────────────────────────────── */
-.form-row {
-  display: flex;
-  align-items: stretch;
-  border-bottom: 1px solid var(--border);
-  min-height: 40px;
-}
-.form-row:last-child { border-bottom: none; }
-.form-row.tall { min-height: 80px; }
-
-.form-label {
-  width: 200px;
-  min-width: 200px;
-  background: var(--gray);
-  padding: 10px 14px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--blue-dark);
-  display: flex;
-  align-items: center;
-  border-right: 1px solid var(--border);
+/* La div intro de la page photos (le .ph) */
+#p6 > .ph {
+padding: 12px 16px !important;
+page-break-after: avoid !important;
+break-after: avoid !important;
 }
 
-.form-label.wide { width: 250px; min-width: 250px; }
-
-.form-field {
-  flex: 1;
-  padding: 8px 12px;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
+#photo-wrap {
+display: block !important;
 }
 
-.form-field input[type="text"],
-.form-field input[type="date"],
-.form-field input[type="number"],
-.form-field textarea {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 16px;
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 8px 12px;
-  background: var(--white);
-  transition: border-color .15s;
-  outline: none;
-  -webkit-appearance: none;
-  appearance: none;
+/* Chaque section photo = 1 page COMPLÈTE */
+.pc {
+display: block !important;
+page-break-before: always !important;
+break-before: always !important;
+page-break-after: avoid !important;
+break-after: avoid !important;
+page-break-inside: avoid !important;
+break-inside: avoid !important;
+padding: 16px 20px !important;
+border: none !important;
+border-radius: 0 !important;
+box-shadow: none !important;
+margin: 0 !important;
+min-height: 200px;
 }
 
-.form-field input[type="text"]:focus,
-.form-field input[type="date"]:focus,
-.form-field input[type="number"]:focus,
-.form-field textarea:focus {
-  border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(11,159,212,0.10);
+/* Titre de section photo */
+.pch {
+page-break-after: avoid !important;
+break-after: avoid !important;
+font-size: 14px !important;
+padding: 12px 16px !important;
+margin-bottom: 12px;
 }
 
-.form-field input.full { width: 100%; }
-.form-field input.half { width: 48%; }
-.form-field input.third { width: 30%; }
-.form-field input.small { width: 80px; }
-.form-field input.medium { width: 140px; }
-
-.form-field textarea { width: 100%; min-height: 70px; resize: vertical; }
-
-
-/* ─── OPT BUTTONS (iOS safe) ──────────────────────────────────────────────*/
-.opts { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 12px; align-items: center; }
-
-.opt-btn {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
-  padding: 8px 14px;
-  border: 1.5px solid var(--border);
-  border-radius: 20px;
-  background: white;
-  cursor: pointer;
-  transition: all .15s;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  -webkit-appearance: none;
-  min-height: 38px;
-  user-select: none;
-  -webkit-user-select: none;
-  outline: none;
+/* 9. CONTENU PHOTO */
+.pcb {
+display: block !important;
 }
 
-.opt-btn:hover { border-color: var(--blue); color: var(--blue); }
-
-.opt-btn.selected {
-  background: var(--blue) !important;
-  color: white !important;
-  border-color: var(--blue) !important;
+.pnl {
+font-size: 11px !important;
+font-weight: 700 !important;
+margin-bottom: 4px !important;
+text-transform: uppercase;
+letter-spacing: .4px;
+color: #0d3f5e !important;
 }
 
-/* ─── ETAT BUTTONS (bon/usage/mauvais) iOS safe ───────────────────────────*/
-.etat-opts { display: flex; gap: 6px; padding: 6px 10px; flex: 1; align-items: center; flex-wrap: wrap; }
-
-.etat-btn {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 7px 14px;
-  border-radius: 20px;
-  cursor: pointer;
-  border: 1.5px solid;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  -webkit-appearance: none;
-  min-height: 38px;
-  outline: none;
-  background: white;
-  user-select: none;
-  -webkit-user-select: none;
-  transition: all .13s;
+.pnote {
+display: block !important;
+border: 1px solid #bbb !important;
+background: #fff !important;
+font-size: 12px !important;
+padding: 8px 10px !important;
+margin-bottom: 12px !important;
+min-height: 60px !important;
+width: 100% !important;
+box-sizing: border-box !important;
+resize: none !important;
 }
 
-.etat-btn.bon { color: var(--green); border-color: var(--green); }
-.etat-btn.bon.selected { background: var(--green) !important; color: white !important; }
-
-.etat-btn.usage { color: var(--accent); border-color: var(--accent); }
-.etat-btn.usage.selected { background: var(--accent) !important; color: white !important; }
-
-.etat-btn.mauvais { color: var(--red); border-color: var(--red); }
-.etat-btn.mauvais.selected { background: var(--red) !important; color: white !important; }
-
-
-/* ─── TABLE MENUISERIES ─────────────────────────────── */
-.menu-table { width: 100%; border-collapse: collapse; }
-.menu-table th {
-  background: var(--blue-light);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--blue-dark);
-  padding: 8px 10px;
-  text-align: left;
-  border: 1px solid var(--border);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.menu-table td {
-  border: 1px solid var(--border);
-  padding: 0;
-}
-.menu-table td input {
-  width: 100%;
-  border: none;
-  padding: 8px 10px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  color: var(--text);
-  outline: none;
-  background: transparent;
-}
-.menu-table td input:focus { background: var(--blue-light); }
-.menu-table tr:nth-child(even) td { background: #fafcff; }
-.menu-table tr:nth-child(even) td input:focus { background: var(--blue-light); }
-
-/* ─── SECTION MURS ──────────────────────────────────── */
-.mur-subheader {
-  background: var(--blue-mid);
-  padding: 8px 20px;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--blue-dark);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.mur-subheader input {
-  border: 1px solid var(--border);
-  border-radius: 5px;
-  padding: 3px 8px;
-  font-size: 12px;
-  font-family: 'DM Sans', sans-serif;
-  width: 160px;
-  outline: none;
-}
-.ep-box {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-}
-.ep-box input { width: 60px; }
-
-/* ─── APPT CARDS ────────────────────────────────────── */
-.appt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 12px; }
-.appt-nb { grid-column: 1/-1; }
-
-.appt-card { background: white; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
-.appt-card-header {
-  background: var(--blue-deep);
-  color: white;
-  padding: 10px 18px;
-  font-size: 13px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.appt-card-header input {
-  background: rgba(255,255,255,0.15);
-  border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 6px;
-  color: white;
-  padding: 3px 8px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  width: 80px;
-  outline: none;
-}
-.appt-card-header input::placeholder { color: rgba(255,255,255,0.5); }
-
-.add-appt-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--blue-light);
-  border: 2px dashed var(--blue);
-  border-radius: 10px;
-  padding: 14px 20px;
-  width: 100%;
-  cursor: pointer;
-  color: var(--blue-dark);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  transition: all .15s;
-}
-.add-appt-btn:hover { background: var(--blue-mid); }
-
-/* ─── NAVIGATION BUTTONS ────────────────────────────── */
-.nav-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 24px;
-  gap: 12px;
+/* Grille photos 2 colonnes */
+.pgrid {
+display: grid !important;
+grid-template-columns: 1fr 1fr !important;
+gap: 10px !important;
+margin-top: 8px !important;
 }
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: none;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all .15s;
+.pitem {
+height: 220px !important;
+break-inside: avoid !important;
+page-break-inside: avoid !important;
+border: 1px solid #ccc !important;
+border-radius: 6px !important;
+overflow: hidden !important;
 }
-.btn-outline {
-  background: white;
-  color: var(--blue);
-  border: 1.5px solid var(--blue);
+
+.pitem img {
+width: 100% !important;
+height: 175px !important;
+object-fit: cover !important;
+display: block !important;
 }
-.btn-outline:hover { background: var(--blue-light); }
 
-.btn-primary {
-  background: var(--blue);
-  color: white;
+.pft {
+background: #eaf4f9 !important;
+padding: 4px 8px !important;
+display: flex !important;
 }
-.btn-primary:hover { background: var(--blue-dark); }
 
-.btn svg { width: 15px; height: 15px; fill: currentColor; }
+.pft input {
+color: #1a3a4c !important;
+font-size: 11px !important;
+background: transparent !important;
+border: none !important;
+}
 
-/* ─── PRINT / PDF ────────────────────────────────────── */
+/* Cacher “Aucune photo” en impression */
+.pmt { display: none !important; }
+
+/* 10. CHIPS COLORÉES */
+.chip.on {
+background: #0b9fd4 !important;
+color: #fff !important;
+border-color: #0b9fd4 !important;
+}
+.eb.b.on { background: #27ae60 !important; color: #fff !important; }
+.eb.u.on { background: #f5a623 !important; color: #fff !important; }
+.eb.m.on { background: #e74c3c !important; color: #fff !important; }
+
+/* 11. TYPOGRAPHIES PRINT */
+.ch  { font-size: 11px !important; padding: 8px 12px !important; }
+.fll { font-size: 10px !important; padding: 5px 12px 2px !important; }
+.chip { font-size: 12px !important; padding: 5px 12px !important; min-height: 32px !important; }
+.el  { font-size: 11px !important; width: 130px !important; min-width: 130px !important; }
+.eb  { font-size: 11px !important; padding: 5px 10px !important; min-height: 30px !important; }
+}
+
+/* ══ iPHONE LAYOUT ══════════════════════════════════════════════════════════ */
+
+/* Force mobile layout always on iPhone */
+.app {
+flex-direction: column !important;
+height: 100vh !important;
+height: 100dvh !important;
+}
+
+/* Hide desktop sidebar completely */
+.sb {
+display: none !important;
+}
+
+/* Show tab bar */
+.iphone-tabs {
+display: flex !important;
+position: fixed;
+bottom: 0;
+left: 0;
+right: 0;
+background: #0d3f5e;
+padding-bottom: env(safe-area-inset-bottom);
+z-index: 200;
+box-shadow: 0 -2px 12px rgba(0,0,0,.25);
+overflow-x: auto;
+-webkit-overflow-scrolling: touch;
+scrollbar-width: none;
+}
+.iphone-tabs::-webkit-scrollbar { display: none; }
+
+.it {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+min-width: 52px;
+flex: 1;
+padding: 8px 4px 6px;
+background: transparent;
+border: none;
+border-top: 2px solid transparent;
+color: rgba(255,255,255,.55);
+font-family: -apple-system, ‘DM Sans’, sans-serif;
+font-size: 9px;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: .3px;
+cursor: pointer;
+touch-action: manipulation;
+-webkit-appearance: none;
+outline: none;
+gap: 3px;
+-webkit-tap-highlight-color: transparent;
+transition: color .15s;
+}
+.it.on { color: #fff; border-top-color: #0b9fd4; }
+.it .nn {
+width: 20px; height: 20px;
+border-radius: 50%;
+background: rgba(255,255,255,.12);
+display: flex; align-items: center; justify-content: center;
+font-size: 9px; font-weight: 700;
+}
+.it.on .nn { background: #0b9fd4; }
+
+/* PDF button in tab bar */
+.it-pdf {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+min-width: 44px;
+padding: 6px 8px;
+background: #0b9fd4;
+border: none;
+border-radius: 0;
+color: #fff;
+font-size: 18px;
+cursor: pointer;
+touch-action: manipulation;
+-webkit-appearance: none;
+outline: none;
+-webkit-tap-highlight-color: transparent;
+}
+
+/* Main content: full width, scrollable, bottom padding for tab bar */
+.mn {
+flex: 1;
+width: 100%;
+overflow-y: auto;
+-webkit-overflow-scrolling: touch;
+padding: 14px 12px calc(70px + env(safe-area-inset-bottom)) 12px !important;
+}
+
+/* FAB hidden on iPhone (PDF in tab bar) */
+.fab { display: none !important; }
+
+/* Compact page header */
+.ph { margin-bottom: 12px !important; }
+.ph h2 { font-size: 16px !important; }
+.ph p { font-size: 11px !important; }
+.phi { width: 34px !important; height: 34px !important; border-radius: 8px !important; }
+.phi svg { width: 17px !important; height: 17px !important; }
+
+/* Cards */
+.card { margin-bottom: 10px !important; border-radius: 10px !important; }
+.ch { font-size: 11px !important; padding: 8px 12px !important; }
+
+/* Fields */
+.fll { font-size: 11px !important; padding: 6px 12px 3px !important; }
+.flb { padding: 8px 12px !important; }
+
+/* Chips: bigger tap targets */
+.chips { gap: 6px !important; padding: 8px 12px !important; }
+.chip {
+padding: 9px 14px !important;
+font-size: 13px !important;
+min-height: 42px !important;
+}
+
+/* Etat rows */
+.er { min-height: 44px !important; }
+.el {
+width: 120px !important;
+min-width: 120px !important;
+font-size: 11px !important;
+padding: 6px 8px !important;
+}
+.eb {
+padding: 7px 11px !important;
+font-size: 11px !important;
+min-height: 36px !important;
+}
+.eb-wrap { padding: 4px 6px !important; gap: 4px !important; }
+
+/* Inputs */
+input[type=text],input[type=date],input[type=number],textarea {
+font-size: 16px !important;
+}
+
+/* Nav buttons */
+.navb { margin-top: 16px !important; }
+.btn-b, .btn-n {
+padding: 13px 18px !important;
+font-size: 14px !important;
+min-height: 50px !important;
+}
+
+/* Appt */
+.ah { padding: 10px 12px !important; font-size: 12px !important; }
+.ah input { width: 60px !important; }
+.adel { font-size: 11px !important; padding: 4px 10px !important; }
+.add-btn { padding: 14px !important; font-size: 13px !important; }
+
+/* Photo */
+.pch { font-size: 11px !important; padding: 8px 12px !important; }
+.pcb { padding: 10px 12px !important; }
+.pnl { font-size: 10px !important; }
+.pbtn { padding: 12px 14px !important; font-size: 13px !important; min-height: 46px !important; }
+.pnote { font-size: 15px !important; min-height: 60px !important; }
+.pgrid { grid-template-columns: repeat(2, 1fr) !important; gap: 6px !important; }
+
+/* Mur subheader */
+.ms { padding: 7px 12px !important; font-size: 11px !important; gap: 6px !important; }
+.ms input { min-width: 100px !important; font-size: 14px !important; }
+.ms .ep input { width: 60px !important; }
+
+/* Progress bar compact */
+.prog { gap: 3px !important; margin-bottom: 14px !important; }
+.ps { height: 3px !important; }
+
+/* Table scrollable */
+.tw { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
+td input { font-size: 14px !important; padding: 7px 8px !important; }
+
 @media print {
-  * {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    color-adjust: exact !important;
-  }
-  body { background: white; }
-  .sidebar { display: none; }
-  .main { padding: 0; max-width: 100%; }
-  .section-page { display: block !important; page-break-after: always; }
-  .nav-buttons { display: none; }
-  .add-appt-btn { display: none; }
-  .card { box-shadow: none; border: 1px solid #ccc; }
-  .page-header { margin-bottom: 16px; }
-
-  .logo-print {
-    display: flex !important;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid var(--blue);
-  }
-  .logo-print-title { font-size: 20px; font-weight: 700; color: var(--blue-deep); }
-  .logo-print-sub { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-
-  /* Force showing all form values in print */
-  input, textarea { border: none !important; outline: none !important; box-shadow: none !important; }
-}
-
-.logo-print { display: none; }
-
-/* ─── PROGRESS BAR ──────────────────────────────────── */
-.progress-bar {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 24px;
-}
-.pb-step {
-  flex: 1;
-  height: 4px;
-  border-radius: 2px;
-  background: var(--border);
-  transition: background .3s;
-}
-.pb-step.done { background: var(--blue); }
-.pb-step.active { background: var(--accent); }
-
-/* ─── TYPOLOGIES TABLE ──────────────────────────────── */
-.typo-table { width: 100%; border-collapse: collapse; }
-.typo-table th {
-  background: var(--blue-light);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--blue-dark);
-  padding: 8px 14px;
-  border: 1px solid var(--border);
-  text-align: left;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.typo-table td {
-  border: 1px solid var(--border);
-  padding: 0;
-}
-.typo-table td input {
-  width: 100%;
-  border: none;
-  padding: 8px 14px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  outline: none;
-}
-.typo-table td input:focus { background: var(--blue-light); }
-
-/* ─── SPLIT ROW ─────────────────────────────────────── */
-.split-row {
-  display: flex;
-  border-bottom: 1px solid var(--border);
-}
-.split-row:last-child { border-bottom: none; }
-.split-cell {
-  flex: 1;
-  border-right: 1px solid var(--border);
-  display: flex;
-  align-items: stretch;
-}
-.split-cell:last-child { border-right: none; }
-.split-cell .form-label {
-  width: 130px;
-  min-width: 130px;
-}
-
-/* ─── PHOTOS ─────────────────────────────────────────── */
-.photo-section {
-  background: white;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  overflow: hidden;
-  margin-bottom: 18px;
-  box-shadow: var(--shadow);
-}
-
-.photo-section-header {
-  background: var(--blue);
-  color: white;
-  padding: 11px 18px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.7px;
-}
-.photo-section-header.dark { background: var(--blue-deep); }
-.photo-section-header svg { width: 18px; height: 18px; fill: white; opacity: 0.9; flex-shrink: 0; }
-
-.photo-section-body { padding: 14px; }
-
-.photo-add-btn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--blue-light);
-  border: 2px dashed var(--blue);
-  border-radius: 10px;
-  padding: 13px 18px;
-  width: 100%;
-  cursor: pointer;
-  color: var(--blue-dark);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 14px;
-  transition: background .15s;
-}
-.photo-add-btn:hover { background: var(--blue-mid); }
-.photo-add-btn svg { width: 20px; height: 20px; stroke: var(--blue); fill: none; stroke-width: 2; flex-shrink: 0; }
-.photo-add-btn input[type="file"] { display: none; }
-
-.photo-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 12px;
-}
-
-.photo-item {
-  position: relative;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1.5px solid var(--border);
-  background: var(--gray);
-  aspect-ratio: 4/3;
-  display: flex;
-  flex-direction: column;
-}
-
-.photo-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.photo-item-footer {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  background: rgba(13,63,94,0.85);
-  padding: 5px 8px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.photo-item-footer input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  color: white;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 11px;
-  font-weight: 500;
-  outline: none;
-  width: 0;
-}
-.photo-item-footer input::placeholder { color: rgba(255,255,255,0.5); }
-
-.photo-del-btn {
-  background: rgba(231,76,60,0.85);
-  border: none;
-  border-radius: 5px;
-  color: white;
-  width: 20px; height: 20px;
-  font-size: 13px;
-  line-height: 1;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-
-.photo-empty {
-  text-align: center;
-  padding: 20px;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-/* print: photos en grille 2 colonnes */
-@media print {
-  .photo-grid { grid-template-columns: 1fr 1fr; }
-  .photo-item { break-inside: avoid; }
-  .photo-del-btn { display: none; }
-  .photo-add-btn { display: none; }
-}
-
-/* ─── iOS / iPadOS SPECIFIC FIXES ───────────────────── */
-
-/* Prevent input zoom on iOS (font-size must be ≥16px) */
-input[type="text"],
-input[type="date"],
-input[type="number"],
-textarea,
-select {
-  font-size: 16px !important;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-/* iOS momentum scrolling */
-.main {
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Safe area for notch/home bar (iPad Pro) */
-.sidebar {
-  padding-top: max(0px, env(safe-area-inset-top));
-  padding-bottom: max(0px, env(safe-area-inset-bottom));
-}
-
-.main {
-  padding-bottom: max(32px, calc(env(safe-area-inset-bottom) + 16px));
-}
-
-/* ─── iPAD LAYOUT (768px+) ───────────────────────────── */
-/* On iPad the sidebar is always visible, good as-is */
-
-/* Make tap targets bigger on touch devices */
-@media (pointer: coarse) {
-  .nav-item {
-    padding: 14px 20px;
-    min-height: 50px;
-  }
-  .opt-label {
-    padding: 8px 16px;
-    font-size: 14px;
-    min-height: 40px;
-    display: flex;
-    align-items: center;
-  }
-  .etat-note input {
-    padding: 12px;
-    font-size: 14px;
-  }
-  .form-field input,
-  .mur-sub input {
-    padding: 10px 12px;
-    font-size: 15px;
-  }
-}
-
-/* ─── iPAD PORTRAIT (768–1024px) ─────────────────────── */
-@media (min-width: 768px) and (max-width: 1024px) {
-  .sidebar { width: 230px; }
-  .main { padding: 24px 28px; }
-  .form-label { width: 170px; min-width: 170px; }
-}
-
-/* ─── iPAD PRO LANDSCAPE (1024px+) ───────────────────── */
-@media (min-width: 1025px) {
-  .sidebar { width: 260px; }
-  .main { padding: 32px 40px; max-width: 960px; }
-}
-
-/* ─── SMALL SCREEN FALLBACK (iPhone) ─────────────────── */
-@media (max-width: 767px) {
-  .app { flex-direction: column; }
-  .sidebar {
-    width: 100%;
-    height: auto;
-    min-height: auto;
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    z-index: 200;
-    flex-direction: row;
-    overflow-x: auto;
-    padding: 0 0 env(safe-area-inset-bottom);
-  }
-  .sidebar-logo { display: none; }
-  .sidebar-nav {
-    display: flex;
-    flex-direction: row;
-    padding: 0;
-    flex: 1;
-    overflow-x: auto;
-  }
-  .nav-section-label { display: none; }
-  .nav-item {
-    flex-direction: column;
-    padding: 8px 10px;
-    font-size: 9px;
-    gap: 2px;
-    border-left: none;
-    border-top: 3px solid transparent;
-    min-width: 56px;
-    text-align: center;
-  }
-  .nav-item.active {
-    border-left: none;
-    border-top-color: var(--blue);
-  }
-  .nav-num { width: 18px; height: 18px; font-size: 9px; }
-  .sidebar-footer { display: none; }
-  .main {
-    padding: 16px 12px;
-    padding-bottom: calc(70px + env(safe-area-inset-bottom));
-  }
-  .form-label { width: 130px; min-width: 130px; font-size: 11px; }
-  .page-header h1 { font-size: 17px; }
-  .photo-grid { grid-template-columns: repeat(2, 1fr); }
-}
-
-/* ─── iOS Safari specific scroll fix ─────────────────── */
-@supports (-webkit-touch-callout: none) {
-  .main { 
-    -webkit-overflow-scrolling: touch;
-    overflow-y: scroll;
-  }
-}
-
-
-/* ─── iOS SAFARI TOUCH FIXES ────────────────────────────────────────────── */
-* { -webkit-tap-highlight-color: rgba(0,0,0,0); }
-
-/* Force ALL clickable elements to register touch on iOS */
-.nav-item,
-.opt-item,
-.opt-label,
-.opt-item label,
-.etat-opt + label,
-.btn,
-.btn-pdf,
-.add-appt-btn,
-.photo-add-btn,
-.photo-del-btn,
-.appt-del,
-button,
-label,
-[onclick] {
-  cursor: pointer !important;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  touch-action: manipulation;
-}
-
-/* Fix checkbox/label on iOS: make label fill touch target */
-.opt-item {
-  display: inline-flex;
-  align-items: center;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-.opt-item input[type="checkbox"] {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-}
-
-/* Bigger touch targets for iPad */
-@media (pointer: coarse) {
-  .opt-label {
-    padding: 10px 18px !important;
-    font-size: 14px !important;
-    min-height: 44px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-  }
-  .nav-item {
-    min-height: 52px !important;
-    padding: 14px 20px !important;
-  }
-  .etat-opt + label {
-    padding: 10px 18px !important;
-    min-height: 44px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-  }
-  .btn {
-    min-height: 52px !important;
-    padding: 14px 24px !important;
-    font-size: 15px !important;
-  }
+.iphone-tabs { display: none !important; }
 }
 
 </style>
@@ -905,1362 +542,614 @@ label,
 <body>
 <div class="app">
 
-<!-- ─── SIDEBAR ─── -->
-<aside class="sidebar">
-  <div class="sidebar-logo">
-    <div class="logo-box">
-      <div class="logo-icon">
-        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22" style="fill:rgba(255,255,255,0.4)"/></svg>
-      </div>
-      <div class="logo-text">
-        <strong>COPRODIAG</strong>
-        <span>Groupe Butagaz</span>
-      </div>
-    </div>
+<!-- SIDEBAR -->
+
+<aside class="sb">
+  <div class="sb-logo"><b>COPRODIAG</b><small>Groupe Butagaz</small></div>
+  <div class="nb">
+    <button class="n on" id="n0" type="button" onclick="go(0)"><span class="nn">1</span>Identification</button>
+    <button class="n" id="n1" type="button" onclick="go(1)"><span class="nn">2</span>Chauffage</button>
+    <button class="n" id="n2" type="button" onclick="go(2)"><span class="nn">3</span>Murs</button>
+    <button class="n" id="n3" type="button" onclick="go(3)"><span class="nn">4</span>Planchers</button>
+    <button class="n" id="n4" type="button" onclick="go(4)"><span class="nn">5</span>Parties Communes</button>
+    <button class="n" id="n5" type="button" onclick="go(5)"><span class="nn">6</span>Appartements</button>
+    <button class="n" id="n6" type="button" onclick="go(6)"><span class="nn">7</span>Photos</button>
   </div>
-
-  <nav class="sidebar-nav">
-    <div class="nav-section-label">Dossier Visite</div>
-    <button class="nav-item active" id="nav-0" onclick="goTo(0)" type="button">
-      <span class="nav-num">1</span> Identification
-    </button>
-    <button class="nav-item" id="nav-1" onclick="goTo(1)" type="button">
-      <span class="nav-num">2</span> Chauffage Collectif
-    </button>
-    <button class="nav-item" id="nav-2" onclick="goTo(2)" type="button">
-      <span class="nav-num">3</span> Murs
-    </button>
-    <button class="nav-item" id="nav-3" onclick="goTo(3)" type="button">
-      <span class="nav-num">4</span> Planchers
-    </button>
-    <button class="nav-item" id="nav-4" onclick="goTo(4)" type="button">
-      <span class="nav-num">5</span> Parties Communes
-    </button>
-    <button class="nav-item" id="nav-5" onclick="goTo(5)" type="button">
-      <span class="nav-num">6</span> Appartements
-    </button>
-    <button class="nav-item" id="nav-6" onclick="goTo(6)" type="button">
-      <span class="nav-num">7</span> 📷 Photos
-    </button>
-  </nav>
-
-  <div class="sidebar-footer">
-    <button class="btn-pdf" onclick="generatePDF()" ontouchend="event.preventDefault();generatePDF()">
-      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>
-      Générer le PDF
-    </button>
+  <button class="sb-pdf" type="button" onclick="genPDF()">📄 Générer PDF</button>
+  <!-- Mobile tab bar -->
+  <div class="tabs">
+    <button class="nt on" id="m0" type="button" onclick="go(0)"><span class="nn">1</span>Ident.</button>
+    <button class="nt" id="m1" type="button" onclick="go(1)"><span class="nn">2</span>Chauf.</button>
+    <button class="nt" id="m2" type="button" onclick="go(2)"><span class="nn">3</span>Murs</button>
+    <button class="nt" id="m3" type="button" onclick="go(3)"><span class="nn">4</span>Planch.</button>
+    <button class="nt" id="m4" type="button" onclick="go(4)"><span class="nn">5</span>Comm.</button>
+    <button class="nt" id="m5" type="button" onclick="go(5)"><span class="nn">6</span>Appts</button>
+    <button class="nt" id="m6" type="button" onclick="go(6)"><span class="nn">7</span>Photos</button>
+    <button class="nt" type="button" onclick="genPDF()" style="font-size:18px;padding:6px 4px;">📄</button>
   </div>
 </aside>
 
-<!-- ─── MAIN ─── -->
-<main class="main">
+<!-- MAIN -->
 
-  <div class="progress-bar" id="progressBar">
-    <div class="pb-step active" id="pb0"></div>
-    <div class="pb-step" id="pb1"></div>
-    <div class="pb-step" id="pb2"></div>
-    <div class="pb-step" id="pb3"></div>
-    <div class="pb-step" id="pb4"></div>
-    <div class="pb-step" id="pb5"></div>
-    <div class="pb-step" id="pb6"></div>
-  </div>
-
-<!-- ══════════════════════════════════════════════════════
-     PAGE 1 – IDENTIFICATION
-══════════════════════════════════════════════════════ -->
-<div class="section-page active" id="page-0">
-  <div class="page-header">
-    <div class="page-header-icon">
-      <svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
-    </div>
-    <div>
-      <h1>Dossier Visite Thermique</h1>
-      <p>Identification de la résidence</p>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">Informations Générales</div>
-    <div class="card-body">
-      <div class="form-row">
-        <div class="form-label">Nom résidence</div>
-        <div class="form-field"><input type="text" class="full" placeholder="Nom de la résidence…"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Adresse de la résidence</div>
-        <div class="form-field"><input type="text" class="full" placeholder="Adresse complète…"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Contact sur Place</div>
-        <div class="form-field" style="gap:16px;">
-          <input type="text" style="flex:1" placeholder="Nom du contact…">
-          <span style="font-size:12px;font-weight:600;color:var(--blue-dark);white-space:nowrap;">Date de la visite :</span>
-          <input type="date" style="width:160px">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Syndic</div>
-        <div class="form-field"><input type="text" class="full" placeholder="Nom du syndic…"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Type de diagnostic</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">DPE</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">DPE+PPPT</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">AE</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">DTG</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">DTG APC</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">Caractéristiques du Bâtiment</div>
-    <div class="card-body">
-      <div class="form-row">
-        <div class="form-label">Année de construction</div>
-        <div class="form-field"><input type="number" style="width:140px" placeholder="ex. 1975" min="1800" max="2025"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Nombre de bâtiment / étages</div>
-        <div class="form-field" style="gap:16px;">
-          <span style="font-size:12px;color:var(--muted)">Bâtiments :</span>
-          <input type="number" style="width:80px" min="1">
-          <span style="font-size:12px;color:var(--muted)">Étages :</span>
-          <input type="number" style="width:80px" min="0">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Nombre de logement / bâtiment</div>
-        <div class="form-field"><input type="number" style="width:100px" min="1"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">Remarques &amp; Typologies</div>
-    <div class="card-body" style="display:flex;gap:0">
-      <div style="flex:1;border-right:1px solid var(--border);padding:12px 16px;">
-        <textarea rows="8" placeholder="Remarques générales…" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:'DM Sans',sans-serif;font-size:13px;resize:vertical;outline:none;"></textarea>
-      </div>
-      <div style="flex:0 0 260px;">
-        <table class="typo-table">
-          <tr><th>Typologie</th><th>Surface (m²)</th></tr>
-          <tr><td style="padding:8px 14px;font-size:12px;font-weight:500;">Studio / T1</td><td><input type="number" placeholder="m²" min="0"></td></tr>
-          <tr><td style="padding:8px 14px;font-size:12px;font-weight:500;">T2</td><td><input type="number" placeholder="m²" min="0"></td></tr>
-          <tr><td style="padding:8px 14px;font-size:12px;font-weight:500;">T3</td><td><input type="number" placeholder="m²" min="0"></td></tr>
-          <tr><td style="padding:8px 14px;font-size:12px;font-weight:500;">T4</td><td><input type="number" placeholder="m²" min="0"></td></tr>
-          <tr><td style="padding:8px 14px;font-size:12px;font-weight:500;">T5</td><td><input type="number" placeholder="m²" min="0"></td></tr>
-          <tr><td style="padding:8px 14px;font-size:12px;font-weight:500;">T6</td><td><input type="number" placeholder="m²" min="0"></td></tr>
-          <tr><td style="padding:8px 14px;font-size:12px;font-weight:500;">T6+</td><td><input type="number" placeholder="m²" min="0"></td></tr>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <div class="nav-buttons">
-    <div></div>
-    <button class="btn btn-primary" onclick="goTo(1)" ontouchend="event.preventDefault();goTo(1)">Chauffage Collectif <svg viewBox="0 0 24 24"><polyline points="9,18 15,12 9,6"/></svg></button>
-  </div>
+<main class="mn" id="main">
+<div class="prog">
+  <div class="ps c" id="ps0"></div><div class="ps" id="ps1"></div><div class="ps" id="ps2"></div>
+  <div class="ps" id="ps3"></div><div class="ps" id="ps4"></div><div class="ps" id="ps5"></div><div class="ps" id="ps6"></div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════
-     PAGE 2 – CHAUFFAGE COLLECTIF
-══════════════════════════════════════════════════════ -->
-<div class="section-page" id="page-1">
-  <div class="page-header">
-    <div class="page-header-icon">
-      <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-    </div>
-    <div><h1>Chauffage Collectif</h1><p>Chaudières, ECS &amp; Émission</p></div>
-  </div>
+<!-- PAGE 1 IDENTIFICATION -->
 
-  <!-- Chaudières -->
-  <div class="card">
-    <div class="card-header">Chaudières</div>
-    <div class="card-body">
-      <div class="form-row">
-        <div class="form-label">Type de chaudière</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Condensation</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Basse température</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Standard</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Réseau urbain</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Énergie utilisée</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Gaz</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Fioul</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Bois</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Électrique</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Géothermie</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Mode de production</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Chauffage seul</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Chauffage et ECS</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">ECS seule</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Année d'installation</div>
-        <div class="form-field"><input type="number" style="width:140px" placeholder="ex. 2010"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Marque &amp; puissance</div>
-        <div class="form-field" style="gap:16px;">
-          <input type="text" style="flex:1" placeholder="Marque et puissance (kW)…">
-          <span style="font-size:12px;font-weight:600;color:var(--blue-dark);">Nombre :</span>
-          <input type="number" style="width:80px" min="1">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Priorité</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Cascade avec priorité</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Cascade sans priorité</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Sans objet</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Régulation centrale</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Oui</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ECS -->
-  <div class="card">
-    <div class="card-header alt">ECS – Eau Chaude Sanitaire</div>
-    <div class="card-body">
-      <div class="form-row">
-        <div class="form-label">Type de production</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Instantanée (pas de ballon)</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Semi-instantanée</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Stockage</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Volume du ballon</div>
-        <div class="form-field" style="gap:16px;">
-          <input type="number" style="width:120px" placeholder="litres">
-          <span style="font-size:12px;font-weight:600;color:var(--blue-dark);">Marque :</span>
-          <input type="text" style="flex:1" placeholder="Marque…">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Année d'installation</div>
-        <div class="form-field"><input type="number" style="width:140px" placeholder="ex. 2015"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Isolation calorifuge</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Absent</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Avant 1981</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">1981 – 2000</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Après 2000</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Émission -->
-  <div class="card">
-    <div class="card-header">Émission</div>
-    <div class="card-body">
-      <div class="form-row">
-        <div class="form-label">Type d'émetteur</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Émetteur soufflage</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Émetteur mural</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher rayonnant</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non répertorié</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Type de matériel</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Radiateur</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Ventilo-convecteur</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Fonctionnement</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Bitube</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Monotube</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Réseau isolé</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Absent</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Avant 1981</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">1981 – 2000</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Après 2000</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row tall">
-        <div class="form-label">Remarques complémentaires</div>
-        <div class="form-field"><textarea placeholder="Remarques chauffage collectif…"></textarea></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="nav-buttons">
-    <button class="btn btn-outline" onclick="goTo(0)" ontouchend="event.preventDefault();goTo(0)"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg> Retour</button>
-    <button class="btn btn-primary" onclick="goTo(2)" ontouchend="event.preventDefault();goTo(2)">Murs <svg viewBox="0 0 24 24"><polyline points="9,18 15,12 9,6"/></svg></button>
-  </div>
+<div class="pg on" id="p0">
+<div class="ph"><div class="phi"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div><div><h2>Identification</h2><p>Informations de la résidence</p></div></div>
+<div class="card">
+  <div class="ch">Résidence</div>
+  <div class="fl"><div class="fll">Nom de la résidence</div><div class="flb"><input type="text" placeholder="Résidence…"></div></div>
+  <div class="fl"><div class="fll">Adresse</div><div class="flb"><input type="text" placeholder="Adresse complète…"></div></div>
+  <div class="fl"><div class="fll">Contact sur place / Date de visite</div><div class="flb"><div class="r2"><input type="text" placeholder="Nom du contact"><input type="date"></div></div></div>
+  <div class="fl"><div class="fll">Syndic</div><div class="flb"><input type="text" placeholder="Nom du syndic…"></div></div>
+  <div class="fl"><div class="fll">Type de diagnostic</div><div class="chips">
+    <button class="chip" type="button" onclick="tog(this)">DPE</button>
+    <button class="chip" type="button" onclick="tog(this)">DPE+PPPT</button>
+    <button class="chip" type="button" onclick="tog(this)">AE</button>
+    <button class="chip" type="button" onclick="tog(this)">DTG</button>
+    <button class="chip" type="button" onclick="tog(this)">DTG APC</button>
+  </div></div>
+</div>
+<div class="card">
+  <div class="ch">Caractéristiques</div>
+  <div class="fl"><div class="fll">Année de construction</div><div class="flb"><input type="number" placeholder="ex. 1975" style="max-width:160px"></div></div>
+  <div class="fl"><div class="fll">Bâtiments / Étages</div><div class="flb"><div class="r2"><input type="number" placeholder="Nb bâtiments"><input type="number" placeholder="Nb étages"></div></div></div>
+  <div class="fl"><div class="fll">Logements par bâtiment</div><div class="flb"><input type="number" placeholder="Nb logements" style="max-width:160px"></div></div>
+  <div class="fl"><div class="fll">Remarques générales</div><div class="flb"><textarea placeholder="Remarques…"></textarea></div></div>
+</div>
+<div class="card">
+  <div class="ch">Typologies</div>
+  <div class="tw"><table>
+    <tr><th>Typologie</th><th>Surface (m²)</th></tr>
+    <tr><td style="padding:9px 12px;font-size:13px">Studio/T1</td><td><input type="number" placeholder="m²"></td></tr>
+    <tr><td style="padding:9px 12px;font-size:13px">T2</td><td><input type="number" placeholder="m²"></td></tr>
+    <tr><td style="padding:9px 12px;font-size:13px">T3</td><td><input type="number" placeholder="m²"></td></tr>
+    <tr><td style="padding:9px 12px;font-size:13px">T4</td><td><input type="number" placeholder="m²"></td></tr>
+    <tr><td style="padding:9px 12px;font-size:13px">T5</td><td><input type="number" placeholder="m²"></td></tr>
+    <tr><td style="padding:9px 12px;font-size:13px">T6+</td><td><input type="number" placeholder="m²"></td></tr>
+  </table></div>
+</div>
+<div class="navb"><div></div><button class="btn-n" type="button" onclick="go(1)">Chauffage ›</button></div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════
-     PAGE 3 – MURS
-══════════════════════════════════════════════════════ -->
-<div class="section-page" id="page-2">
-  <div class="page-header">
-    <div class="page-header-icon">
-      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/><line x1="15" y1="9" x2="15" y2="21"/></svg>
-    </div>
-    <div><h1>Murs</h1><p>Structure, isolation et doublage</p></div>
-  </div>
+<!-- PAGE 2 CHAUFFAGE -->
 
-  <!-- Mur 1 -->
-  <div class="card" id="mur-1-card">
-    <div class="card-header">Murs</div>
-    <div class="card-body">
-      <div class="mur-subheader">
-        Mur_1, emplacement :
-        <input type="text" placeholder="ex. Façade Nord…">
-        <div class="ep-box">Épaisseur : <input type="number" placeholder="cm" min="0"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Structure</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Briques pleines</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Briques creuses</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Blocs béton pleins</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Blocs béton creux</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Béton banché / préfa</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Béton de mâchefer</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pierre pleine</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pierre avec remplissage</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pans de bois</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Ossature bois</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Structure inconnue</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Isolation</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non isolé</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Intérieure</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Extérieure</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Information isolant</div>
-        <div class="form-field" style="flex-wrap:wrap;gap:10px;">
-          <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pas d'info</button>
-          <button class="opt-btn" onclick="toggleOpt(this)" type="button">Épaisseur connue</button>
-          <button class="opt-btn" onclick="toggleOpt(this)" type="button">Date d'installation</button>
-          <button class="opt-btn" onclick="toggleOpt(this)" type="button">Résistance connue</button>
-          <input type="text" placeholder="Valeur / précision…" style="border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;width:220px;outline:none;">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Présence doublage</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Lame d'air &gt; 15mm</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Lame d'air &lt; 15mm</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Mur 2 -->
-      <div class="mur-subheader" style="margin-top:0;border-top:2px solid var(--blue-mid);">
-        Mur_2, emplacement :
-        <input type="text" placeholder="ex. Façade Sud…">
-        <div class="ep-box">Épaisseur : <input type="number" placeholder="cm" min="0"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Structure</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Briques pleines</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Briques creuses</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Blocs béton pleins</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Blocs béton creux</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Béton banché / préfa</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Béton de mâchefer</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pierre pleine</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pierre avec remplissage</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pans de bois</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Ossature bois</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Structure inconnue</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Isolation</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non isolé</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Intérieure</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Extérieure</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Information isolant</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pas d'info</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Épaisseur connue</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Date d'installation</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Résistance connue</button>
-            <input type="text" placeholder="Valeur / précision…" style="border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;width:220px;outline:none;">
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Présence doublage</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Lame d'air &gt; 15mm</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Lame d'air &lt; 15mm</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Mur 3 -->
-      <div class="mur-subheader" style="margin-top:0;border-top:2px solid var(--blue-mid);">
-        Mur_3, emplacement :
-        <input type="text" placeholder="ex. Pignon Est…">
-        <div class="ep-box">Épaisseur : <input type="number" placeholder="cm" min="0"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Structure</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Briques pleines</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Briques creuses</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Blocs béton pleins</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Blocs béton creux</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Béton banché / préfa</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Béton de mâchefer</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pierre pleine</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pierre avec remplissage</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pans de bois</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Ossature bois</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Structure inconnue</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Isolation</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non isolé</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Intérieure</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Extérieure</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Information isolant</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pas d'info</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Épaisseur connue</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Date d'installation</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Résistance connue</button>
-            <input type="text" placeholder="Valeur / précision…" style="border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;width:220px;outline:none;">
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Présence doublage</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Lame d'air &gt; 15mm</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Lame d'air &lt; 15mm</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-row tall">
-        <div class="form-label">Remarques complémentaires</div>
-        <div class="form-field"><textarea placeholder="État général, présence de dégradations, état des balcons, garde corps, travaux réalisés…"></textarea></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="nav-buttons">
-    <button class="btn btn-outline" onclick="goTo(1)" ontouchend="event.preventDefault();goTo(1)"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg> Retour</button>
-    <button class="btn btn-primary" onclick="goTo(3)" ontouchend="event.preventDefault();goTo(3)">Planchers <svg viewBox="0 0 24 24"><polyline points="9,18 15,12 9,6"/></svg></button>
-  </div>
+<div class="pg" id="p1">
+<div class="ph"><div class="phi"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><div><h2>Chauffage Collectif</h2><p>Chaudières, ECS, Émission</p></div></div>
+<div class="card">
+  <div class="ch">Chaudières</div>
+  <div class="fl"><div class="fll">Type de chaudière</div><div class="chips">
+    <button class="chip" type="button" onclick="tog(this)">Condensation</button>
+    <button class="chip" type="button" onclick="tog(this)">Basse température</button>
+    <button class="chip" type="button" onclick="tog(this)">Standard</button>
+    <button class="chip" type="button" onclick="tog(this)">Réseau urbain</button>
+  </div></div>
+  <div class="fl"><div class="fll">Énergie utilisée</div><div class="chips">
+    <button class="chip" type="button" onclick="tog(this)">Gaz</button>
+    <button class="chip" type="button" onclick="tog(this)">Fioul</button>
+    <button class="chip" type="button" onclick="tog(this)">Bois</button>
+    <button class="chip" type="button" onclick="tog(this)">Électrique</button>
+    <button class="chip" type="button" onclick="tog(this)">Géothermie</button>
+  </div></div>
+  <div class="fl"><div class="fll">Mode de production</div><div class="chips">
+    <button class="chip" type="button" onclick="tog(this)">Chauffage seul</button>
+    <button class="chip" type="button" onclick="tog(this)">Chauffage + ECS</button>
+    <button class="chip" type="button" onclick="tog(this)">ECS seule</button>
+  </div></div>
+  <div class="fl"><div class="fll">Année installation</div><div class="flb"><input type="number" placeholder="ex. 2010" style="max-width:160px"></div></div>
+  <div class="fl"><div class="fll">Marque / Puissance / Nombre</div><div class="flb"><div class="r2"><input type="text" placeholder="Marque (kW)"><input type="number" placeholder="Nb"></div></div></div>
+  <div class="fl"><div class="fll">Priorité</div><div class="chips">
+    <button class="chip" type="button" onclick="tog(this)">Cascade avec priorité</button>
+    <button class="chip" type="button" onclick="tog(this)">Cascade sans priorité</button>
+    <button class="chip" type="button" onclick="tog(this)">Sans objet</button>
+  </div></div>
+  <div class="fl"><div class="fll">Régulation centrale</div><div class="chips">
+    <button class="chip" type="button" onclick="tog(this)">Oui</button>
+    <button class="chip" type="button" onclick="tog(this)">Non</button>
+  </div></div>
+</div>
+<div class="card">
+  <div class="ch dk">ECS</div>
+  <div class="fl"><div class="fll">Type de production</div><div class="chips">
+    <button class="chip" type="button" onclick="tog(this)">Instantanée</button>
+    <button class="chip" type="button" onclick="tog(this)">Semi-instantanée</button>
+    <button class="chip" type="button" onclick="tog(this)">Stockage</button>
+  </div></div>
+  <div class="fl"><div class="fll">Volume / Marque / Année</div><div class="flb"><div class="r2"><input type="number" placeholder="Litres"><input type="text" placeholder="Marque"><input type="number" placeholder="Année"></div></div></div>
+  <div class="fl"><div class="fll">Isolation calorifuge</div><div class="chips">
+    <button class="chip" type="button" onclick="tog(this)">Absent</button>
+    <button class="chip" type="button" onclick="tog(this)">Avant 1981</button>
+    <button class="chip" type="button" onclick="tog(this)">1981–2000</button>
+    <button class="chip" type="button" onclick="tog(this)">Après 2000</button>
+  </div></div>
+</div>
+<div class="card">
+  <div class="ch">Émission</div>
+  <div class="fl"><div class="fll">Type émetteur</div><div class="chips">
+    <button class="chip" type="button" onclick="tog(this)">Soufflage</button>
+    <button class="chip" type="button" onclick="tog(this)">Mural</button>
+    <button class="chip" type="button" onclick="tog(this)">Plancher rayonnant</button>
+    <button class="chip" type="button" onclick="tog(this)">Non répertorié</button>
+  </div></div>
+  <div class="fl"><div class="fll">Matériel</div><div class="chips">
+    <button class="chip" type="button" onclick="tog(this)">Radiateur</button>
+    <button class="chip" type="button" onclick="tog(this)">Ventilo-convecteur</button>
+    <button class="chip" type="button" onclick="tog(this)">Plancher</button>
+  </div></div>
+  <div class="fl"><div class="fll">Fonctionnement</div><div class="chips">
+    <button class="chip" type="button" onclick="tog(this)">Bitube</button>
+    <button class="chip" type="button" onclick="tog(this)">Monotube</button>
+  </div></div>
+  <div class="fl"><div class="fll">Réseau isolé</div><div class="chips">
+    <button class="chip" type="button" onclick="tog(this)">Absent</button>
+    <button class="chip" type="button" onclick="tog(this)">Avant 1981</button>
+    <button class="chip" type="button" onclick="tog(this)">1981–2000</button>
+    <button class="chip" type="button" onclick="tog(this)">Après 2000</button>
+  </div></div>
+  <div class="fl"><div class="fll">Remarques</div><div class="flb"><textarea placeholder="Remarques chauffage collectif…"></textarea></div></div>
+</div>
+<div class="navb"><button class="btn-b" type="button" onclick="go(0)">‹ Retour</button><button class="btn-n" type="button" onclick="go(2)">Murs ›</button></div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════
-     PAGE 4 – PLANCHERS
-══════════════════════════════════════════════════════ -->
-<div class="section-page" id="page-3">
-  <div class="page-header">
-    <div class="page-header-icon">
-      <svg viewBox="0 0 24 24"><polygon points="12,2 22,8 22,16 12,22 2,16 2,8"/></svg>
-    </div>
-    <div><h1>Planchers Hauts et Bas</h1><p>Structure et isolation des planchers</p></div>
-  </div>
+<!-- PAGE 3 MURS -->
 
-  <!-- Planchers hauts -->
-  <div class="card">
-    <div class="card-header">Planchers Hauts</div>
-    <div class="card-body">
-      <!-- PH1 -->
-      <div class="mur-subheader">
-        Planchers hauts_1, emplacement :
-        <input type="text" placeholder="ex. Toiture terrasse…">
-      </div>
-      <div class="form-row">
-        <div class="form-label">Structure</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plafond béton sur combles</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plafond bois sur combles</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Rampants de combles aménagés</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Toiture terrasse béton</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Toiture bac acier / zinc</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Structure inconnue</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Isolation</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non isolé</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Intérieure</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Extérieure</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Information isolant</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pas d'info</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Épaisseur connue</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Date d'installation</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Résistance connue</button>
-            <input type="text" placeholder="Valeur…" style="border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;width:200px;outline:none;">
-          </div>
-        </div>
-      </div>
-
-      <!-- PH2 -->
-      <div class="mur-subheader" style="border-top:2px solid var(--blue-mid);">
-        Planchers hauts_2, emplacement :
-        <input type="text" placeholder="ex. Combles perdus…">
-      </div>
-      <div class="form-row">
-        <div class="form-label">Structure</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plafond béton sur combles</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plafond bois sur combles</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Rampants de combles aménagés</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Toiture terrasse béton</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Toiture bac acier / zinc</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Structure inconnue</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Isolation</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non isolé</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Intérieure</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Extérieure</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Information isolant</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pas d'info</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Épaisseur connue</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Date d'installation</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Résistance connue</button>
-            <input type="text" placeholder="Valeur…" style="border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;width:200px;outline:none;">
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Planchers bas -->
-  <div class="card">
-    <div class="card-header alt">Planchers Bas</div>
-    <div class="card-body">
-      <!-- PB1 -->
-      <div class="mur-subheader">
-        Planchers bas_1, emplacement :
-        <input type="text" placeholder="ex. Plancher sur sous-sol…">
-      </div>
-      <div class="form-row">
-        <div class="form-label">Structure</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher / SS béton</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher / SS hourdis</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher / SS Voutains</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Planchers sur VS</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher sur terre plein</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher / extérieur</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Structure inconnue</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Isolation</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non isolé</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Intérieure</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Extérieure</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Information isolant</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pas d'info</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Épaisseur connue</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Date d'installation</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Résistance connue</button>
-            <input type="text" placeholder="Valeur…" style="border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;width:200px;outline:none;">
-          </div>
-        </div>
-      </div>
-
-      <!-- PB2 -->
-      <div class="mur-subheader" style="border-top:2px solid var(--blue-mid);">
-        Planchers bas_2, emplacement :
-        <input type="text" placeholder="ex. Plancher sur vide sanitaire…">
-      </div>
-      <div class="form-row">
-        <div class="form-label">Structure</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher / SS béton</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher / SS hourdis</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher / SS Voutains</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Planchers sur VS</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher sur terre plein</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Plancher / extérieur</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Structure inconnue</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Isolation</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non isolé</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Intérieure</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Extérieure</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Information isolant</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pas d'info</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Épaisseur connue</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Date d'installation</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Résistance connue</button>
-            <input type="text" placeholder="Valeur…" style="border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;width:200px;outline:none;">
-          </div>
-        </div>
-      </div>
-
-      <div class="form-row tall">
-        <div class="form-label">Remarques complémentaires</div>
-        <div class="form-field"><textarea placeholder="État général, présence de dégradations, présence de protection, végétation, travaux réalisés…"></textarea></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="nav-buttons">
-    <button class="btn btn-outline" onclick="goTo(2)" ontouchend="event.preventDefault();goTo(2)"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg> Retour</button>
-    <button class="btn btn-primary" onclick="goTo(4)" ontouchend="event.preventDefault();goTo(4)">Parties Communes <svg viewBox="0 0 24 24"><polyline points="9,18 15,12 9,6"/></svg></button>
-  </div>
+<div class="pg" id="p2">
+<div class="ph"><div class="phi"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/><line x1="15" y1="9" x2="15" y2="21"/></svg></div><div><h2>Murs</h2><p>Structure, isolation, doublage</p></div></div>
+<div class="card">
+  <div class="ch">Murs</div>
+  <div class="ms"><span>Mur 1 – Emplacement :</span><input type="text" placeholder="ex. Façade Nord"><span class="ep">Ép. <input type="number" placeholder="cm"> cm</span></div>
+  <div class="fl"><div class="fll">Structure</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Briques pleines</button><button class="chip" type="button" onclick="tog(this)">Briques creuses</button><button class="chip" type="button" onclick="tog(this)">Blocs béton pleins</button><button class="chip" type="button" onclick="tog(this)">Blocs béton creux</button><button class="chip" type="button" onclick="tog(this)">Béton banché/préfa</button><button class="chip" type="button" onclick="tog(this)">Béton mâchefer</button><button class="chip" type="button" onclick="tog(this)">Pierre pleine</button><button class="chip" type="button" onclick="tog(this)">Pierre+remplissage</button><button class="chip" type="button" onclick="tog(this)">Pans de bois</button><button class="chip" type="button" onclick="tog(this)">Ossature bois</button><button class="chip" type="button" onclick="tog(this)">Inconnue</button></div></div>
+  <div class="fl"><div class="fll">Isolation</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Non isolé</button><button class="chip" type="button" onclick="tog(this)">Intérieure</button><button class="chip" type="button" onclick="tog(this)">Extérieure</button></div></div>
+  <div class="fl"><div class="fll">Info isolant</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Pas info</button><button class="chip" type="button" onclick="tog(this)">Épaisseur connue</button><button class="chip" type="button" onclick="tog(this)">Date connue</button><button class="chip" type="button" onclick="tog(this)">Résistance connue</button></div></div>
+  <div class="fl"><div class="fll">Doublage</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Non</button><button class="chip" type="button" onclick="tog(this)">Lame air &gt;15mm</button><button class="chip" type="button" onclick="tog(this)">Lame air &lt;15mm</button></div></div>
+  <div class="ms"><span>Mur 2 – Emplacement :</span><input type="text" placeholder="ex. Façade Sud"><span class="ep">Ép. <input type="number" placeholder="cm"> cm</span></div>
+  <div class="fl"><div class="fll">Structure</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Briques pleines</button><button class="chip" type="button" onclick="tog(this)">Briques creuses</button><button class="chip" type="button" onclick="tog(this)">Blocs béton pleins</button><button class="chip" type="button" onclick="tog(this)">Blocs béton creux</button><button class="chip" type="button" onclick="tog(this)">Béton banché/préfa</button><button class="chip" type="button" onclick="tog(this)">Béton mâchefer</button><button class="chip" type="button" onclick="tog(this)">Pierre pleine</button><button class="chip" type="button" onclick="tog(this)">Pierre+remplissage</button><button class="chip" type="button" onclick="tog(this)">Pans de bois</button><button class="chip" type="button" onclick="tog(this)">Ossature bois</button><button class="chip" type="button" onclick="tog(this)">Inconnue</button></div></div>
+  <div class="fl"><div class="fll">Isolation</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Non isolé</button><button class="chip" type="button" onclick="tog(this)">Intérieure</button><button class="chip" type="button" onclick="tog(this)">Extérieure</button></div></div>
+  <div class="fl"><div class="fll">Info isolant</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Pas info</button><button class="chip" type="button" onclick="tog(this)">Épaisseur connue</button><button class="chip" type="button" onclick="tog(this)">Date connue</button><button class="chip" type="button" onclick="tog(this)">Résistance connue</button></div></div>
+  <div class="fl"><div class="fll">Doublage</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Non</button><button class="chip" type="button" onclick="tog(this)">Lame air &gt;15mm</button><button class="chip" type="button" onclick="tog(this)">Lame air &lt;15mm</button></div></div>
+  <div class="ms"><span>Mur 3 – Emplacement :</span><input type="text" placeholder="ex. Pignon Est"><span class="ep">Ép. <input type="number" placeholder="cm"> cm</span></div>
+  <div class="fl"><div class="fll">Structure</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Briques pleines</button><button class="chip" type="button" onclick="tog(this)">Briques creuses</button><button class="chip" type="button" onclick="tog(this)">Blocs béton pleins</button><button class="chip" type="button" onclick="tog(this)">Blocs béton creux</button><button class="chip" type="button" onclick="tog(this)">Béton banché/préfa</button><button class="chip" type="button" onclick="tog(this)">Béton mâchefer</button><button class="chip" type="button" onclick="tog(this)">Pierre pleine</button><button class="chip" type="button" onclick="tog(this)">Pierre+remplissage</button><button class="chip" type="button" onclick="tog(this)">Pans de bois</button><button class="chip" type="button" onclick="tog(this)">Ossature bois</button><button class="chip" type="button" onclick="tog(this)">Inconnue</button></div></div>
+  <div class="fl"><div class="fll">Isolation</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Non isolé</button><button class="chip" type="button" onclick="tog(this)">Intérieure</button><button class="chip" type="button" onclick="tog(this)">Extérieure</button></div></div>
+  <div class="fl"><div class="fll">Info isolant</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Pas info</button><button class="chip" type="button" onclick="tog(this)">Épaisseur connue</button><button class="chip" type="button" onclick="tog(this)">Date connue</button><button class="chip" type="button" onclick="tog(this)">Résistance connue</button></div></div>
+  <div class="fl"><div class="fll">Doublage</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Non</button><button class="chip" type="button" onclick="tog(this)">Lame air &gt;15mm</button><button class="chip" type="button" onclick="tog(this)">Lame air &lt;15mm</button></div></div>
+  <div class="fl"><div class="fll">Remarques</div><div class="flb"><textarea placeholder="État général, dégradations, balcons, garde-corps…"></textarea></div></div>
+</div>
+<div class="navb"><button class="btn-b" type="button" onclick="go(1)">‹ Retour</button><button class="btn-n" type="button" onclick="go(3)">Planchers ›</button></div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════
-     PAGE 5 – PARTIES COMMUNES
-══════════════════════════════════════════════════════ -->
-<div class="section-page" id="page-4">
-  <div class="page-header">
-    <div class="page-header-icon">
-      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-    </div>
-    <div><h1>Parties Communes</h1><p>Halls, cages d'escalier, sous-sols &amp; parkings</p></div>
-  </div>
+<!-- PAGE 4 PLANCHERS -->
 
-  <!-- Entrées / Halls -->
-  <div class="card">
-    <div class="card-header">Entrées / Halls d'entrée</div>
-    <div class="card-body">
-      <div class="form-row" style="min-height:auto;padding:12px 0;">
-        <div class="form-label" style="align-self:flex-start;padding-top:12px;">Menuiseries</div>
-        <div class="form-field" style="padding:8px;">
-          <table class="menu-table" style="width:100%">
-            <tr>
-              <th>Nom</th><th>SAS</th><th>Matériau</th><th>Vitrage</th><th>Largeur</th><th>Hauteur</th><th>Schéma</th>
-            </tr>
-            <tr><td><input type="text" placeholder="Porte hall"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:70px"></td><td><input type="text" style="width:70px"></td><td><input type="text"></td></tr>
-            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:70px"></td><td><input type="text" style="width:70px"></td><td><input type="text"></td></tr>
-          </table>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Chauffés</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Oui</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Non</button>
-          </div>
-        </div>
-      </div>
-      <div class="etat-row"><div class="etat-label">Interphonie</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
-      <div class="etat-row"><div class="etat-label">Éclairage</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
-      <div class="etat-row"><div class="etat-label">Plans d'évacuation</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
-      <div class="etat-row"><div class="etat-label">Porte coupe-feu</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
-      <div class="etat-row"><div class="etat-label">Conservation</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
-    </div>
-  </div>
-
-  <!-- Cages escalier -->
-  <div class="card">
-    <div class="card-header alt">Cages Escalier / Palier</div>
-    <div class="card-body">
-      <div class="form-row" style="min-height:auto;padding:12px 0;">
-        <div class="form-label" style="align-self:flex-start;padding-top:12px;">Menuiseries</div>
-        <div class="form-field" style="padding:8px;">
-          <table class="menu-table" style="width:100%">
-            <tr><th>Nom</th><th>SAS</th><th>Matériau</th><th>Vitrage</th><th>Largeur</th><th>Hauteur</th><th>Schéma</th></tr>
-            <tr><td><input type="text" placeholder="Fenêtre palier"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:70px"></td><td><input type="text" style="width:70px"></td><td><input type="text"></td></tr>
-            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:70px"></td><td><input type="text" style="width:70px"></td><td><input type="text"></td></tr>
-            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:70px"></td><td><input type="text" style="width:70px"></td><td><input type="text"></td></tr>
-          </table>
-        </div>
-      </div>
-      <div class="etat-row"><div class="etat-label">Éclairage</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
-      <div class="etat-row"><div class="etat-label">Câblage élec visible</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
-      <div class="etat-row"><div class="etat-label">Porte coupe-feu</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
-      <div class="etat-row"><div class="etat-label">Conservation paliers</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
-      <div class="etat-row"><div class="etat-label">Conservation cages</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
-      <div class="etat-row"><div class="etat-label">Désenfumage</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
-    </div>
-  </div>
-
-  <!-- Sous-sols -->
-  <div class="card">
-    <div class="card-header">Sous-sols / Caves</div>
-    <div class="card-body">
-      <div class="etat-row"><div class="etat-label">Éclairage</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
-      <div class="etat-row"><div class="etat-label">Câblage élec visible</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
-      <div class="etat-row"><div class="etat-label">Réseaux visibles</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
-      <div class="etat-row"><div class="etat-label">État général</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
-      <div class="etat-row"><div class="etat-label">Blocs secours</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
-      <div class="etat-row"><div class="etat-label">Locaux poubelles</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
-    </div>
-  </div>
-
-  <!-- Parkings -->
-  <div class="card">
-    <div class="card-header alt">Parkings</div>
-    <div class="card-body">
-      <div class="etat-row"><div class="etat-label">Éclairage</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
-      <div class="etat-row"><div class="etat-label">Réseaux visibles</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
-      <div class="etat-row"><div class="etat-label">État général</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
-      <div class="etat-row"><div class="etat-label">Extincteurs</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
-      <div class="etat-row"><div class="etat-label">Bac à sable</div><div class="etat-opts"><button class="etat-btn bon" onclick="toggleEtat(this)" type="button">bon</button><button class="etat-btn usage" onclick="toggleEtat(this)" type="button">usage</button><button class="etat-btn mauvais" onclick="toggleEtat(this)" type="button">mauvais</button></div><div class="etat-note"><input type="text" placeholder="Remarque…"></div></div>
-    </div>
-  </div>
-
-  <div class="nav-buttons">
-    <button class="btn btn-outline" onclick="goTo(3)" ontouchend="event.preventDefault();goTo(3)"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg> Retour</button>
-    <button class="btn btn-primary" onclick="goTo(5)" ontouchend="event.preventDefault();goTo(5)">Appartements <svg viewBox="0 0 24 24"><polyline points="9,18 15,12 9,6"/></svg></button>
-  </div>
+<div class="pg" id="p3">
+<div class="ph"><div class="phi"><svg viewBox="0 0 24 24"><polygon points="12,2 22,12 2,12"/><rect x="4" y="12" width="16" height="10"/></svg></div><div><h2>Planchers Hauts et Bas</h2><p>Structure et isolation</p></div></div>
+<div class="card">
+  <div class="ch">Planchers Hauts</div>
+  <div class="ms"><span>Plancher haut 1 :</span><input type="text" placeholder="ex. Toiture terrasse"></div>
+  <div class="fl"><div class="fll">Structure</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Plafond béton/combles</button><button class="chip" type="button" onclick="tog(this)">Plafond bois/combles</button><button class="chip" type="button" onclick="tog(this)">Rampants aménagés</button><button class="chip" type="button" onclick="tog(this)">Toiture terrasse béton</button><button class="chip" type="button" onclick="tog(this)">Bac acier/zinc</button><button class="chip" type="button" onclick="tog(this)">Inconnue</button></div></div>
+  <div class="fl"><div class="fll">Isolation</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Non isolé</button><button class="chip" type="button" onclick="tog(this)">Intérieure</button><button class="chip" type="button" onclick="tog(this)">Extérieure</button></div></div>
+  <div class="fl"><div class="fll">Info isolant</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Pas info</button><button class="chip" type="button" onclick="tog(this)">Épaisseur connue</button><button class="chip" type="button" onclick="tog(this)">Date connue</button><button class="chip" type="button" onclick="tog(this)">Résistance connue</button></div></div>
+  <div class="ms"><span>Plancher haut 2 :</span><input type="text" placeholder="ex. Combles perdus"></div>
+  <div class="fl"><div class="fll">Structure</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Plafond béton/combles</button><button class="chip" type="button" onclick="tog(this)">Plafond bois/combles</button><button class="chip" type="button" onclick="tog(this)">Rampants aménagés</button><button class="chip" type="button" onclick="tog(this)">Toiture terrasse béton</button><button class="chip" type="button" onclick="tog(this)">Bac acier/zinc</button><button class="chip" type="button" onclick="tog(this)">Inconnue</button></div></div>
+  <div class="fl"><div class="fll">Isolation</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Non isolé</button><button class="chip" type="button" onclick="tog(this)">Intérieure</button><button class="chip" type="button" onclick="tog(this)">Extérieure</button></div></div>
+  <div class="fl"><div class="fll">Info isolant</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Pas info</button><button class="chip" type="button" onclick="tog(this)">Épaisseur connue</button><button class="chip" type="button" onclick="tog(this)">Date connue</button><button class="chip" type="button" onclick="tog(this)">Résistance connue</button></div></div>
+</div>
+<div class="card">
+  <div class="ch dk">Planchers Bas</div>
+  <div class="ms"><span>Plancher bas 1 :</span><input type="text" placeholder="ex. Sur sous-sol"></div>
+  <div class="fl"><div class="fll">Structure</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Plancher/SS béton</button><button class="chip" type="button" onclick="tog(this)">Plancher/SS hourdis</button><button class="chip" type="button" onclick="tog(this)">Plancher/SS voutains</button><button class="chip" type="button" onclick="tog(this)">Sur vide sanitaire</button><button class="chip" type="button" onclick="tog(this)">Terre plein</button><button class="chip" type="button" onclick="tog(this)">Sur extérieur</button><button class="chip" type="button" onclick="tog(this)">Inconnue</button></div></div>
+  <div class="fl"><div class="fll">Isolation</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Non isolé</button><button class="chip" type="button" onclick="tog(this)">Intérieure</button><button class="chip" type="button" onclick="tog(this)">Extérieure</button></div></div>
+  <div class="fl"><div class="fll">Info isolant</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Pas info</button><button class="chip" type="button" onclick="tog(this)">Épaisseur connue</button><button class="chip" type="button" onclick="tog(this)">Date connue</button><button class="chip" type="button" onclick="tog(this)">Résistance connue</button></div></div>
+  <div class="ms"><span>Plancher bas 2 :</span><input type="text" placeholder="ex. Vide sanitaire"></div>
+  <div class="fl"><div class="fll">Structure</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Plancher/SS béton</button><button class="chip" type="button" onclick="tog(this)">Plancher/SS hourdis</button><button class="chip" type="button" onclick="tog(this)">Plancher/SS voutains</button><button class="chip" type="button" onclick="tog(this)">Sur vide sanitaire</button><button class="chip" type="button" onclick="tog(this)">Terre plein</button><button class="chip" type="button" onclick="tog(this)">Sur extérieur</button><button class="chip" type="button" onclick="tog(this)">Inconnue</button></div></div>
+  <div class="fl"><div class="fll">Isolation</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Non isolé</button><button class="chip" type="button" onclick="tog(this)">Intérieure</button><button class="chip" type="button" onclick="tog(this)">Extérieure</button></div></div>
+  <div class="fl"><div class="fll">Info isolant</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Pas info</button><button class="chip" type="button" onclick="tog(this)">Épaisseur connue</button><button class="chip" type="button" onclick="tog(this)">Date connue</button><button class="chip" type="button" onclick="tog(this)">Résistance connue</button></div></div>
+  <div class="fl"><div class="fll">Remarques</div><div class="flb"><textarea placeholder="État général, végétation, protections…"></textarea></div></div>
+</div>
+<div class="navb"><button class="btn-b" type="button" onclick="go(2)">‹ Retour</button><button class="btn-n" type="button" onclick="go(4)">Parties Communes ›</button></div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════
-     PAGE 6 – APPARTEMENTS
-══════════════════════════════════════════════════════ -->
-<div class="section-page" id="page-5">
-  <div class="page-header">
-    <div class="page-header-icon">
-      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-    </div>
-    <div><h1>Appartements</h1><p>Visite individuelle par logement</p></div>
-  </div>
+<!-- PAGE 5 PARTIES COMMUNES -->
 
-  <div id="appt-container"></div>
-
-  <button class="add-appt-btn" onclick="addAppartement()">
-    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-    Ajouter un appartement
-  </button>
-
-  <div class="nav-buttons">
-    <button class="btn btn-outline" onclick="goTo(4)" ontouchend="event.preventDefault();goTo(4)"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg> Retour</button>
-    <button class="btn btn-primary" onclick="goTo(6)" ontouchend="event.preventDefault();goTo(6)">Photos <svg viewBox="0 0 24 24"><polyline points="9,18 15,12 9,6"/></svg></button>
-  </div>
+<div class="pg" id="p4">
+<div class="ph"><div class="phi"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div><div><h2>Parties Communes</h2><p>Halls, escaliers, sous-sols, parkings</p></div></div>
+<div class="card">
+  <div class="ch">Entrées / Halls</div>
+  <div class="fl"><div class="fll">Menuiseries</div><div class="flb"><div class="tw"><table><tr><th>Nom</th><th>Matériau</th><th>Vitrage</th><th>Largeur</th><th>Hauteur</th></tr><tr><td><input type="text" placeholder="Porte hall"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:65px"></td><td><input type="text" style="width:65px"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:65px"></td><td><input type="text" style="width:65px"></td></tr></table></div></div></div>
+  <div class="fl"><div class="fll">Chauffés</div><div class="chips"><button class="chip" type="button" onclick="tog(this)">Oui</button><button class="chip" type="button" onclick="tog(this)">Non</button></div></div>
+  <div class="er"><div class="el">Interphonie</div><div class="eb-wrap"><button class="eb b" type="button" onclick="tog(this)">bon</button><button class="eb u" type="button" onclick="tog(this)">usage</button><button class="eb m" type="button" onclick="tog(this)">mauvais</button></div><div class="en"><input type="text" placeholder="Remarque…"></div></div>
+  <div class="er"><div class="el">Éclairage</div><div class="eb-wrap"><button class="eb b" type="button" onclick="tog(this)">bon</button><button class="eb u" type="button" onclick="tog(this)">usage</button><button class="eb m" type="button" onclick="tog(this)">mauvais</button></div><div class="en"><input type="text" placeholder="Remarque…"></div></div>
+  <div class="er"><div class="el">Plans évacuation</div><div class="eb-wrap"><button class="eb b" type="button" onclick="tog(this)">bon</button><button class="eb u" type="button" onclick="tog(this)">usage</button><button class="eb m" type="button" onclick="tog(this)">mauvais</button></div><div class="en"><input type="text" placeholder="Remarque…"></div></div>
+  <div class="er"><div class="el">Porte coupe-feu</div><div class="eb-wrap"><button class="eb b" type="button" onclick="tog(this)">bon</button><button class="eb u" type="button" onclick="tog(this)">usage</button><button class="eb m" type="button" onclick="tog(this)">mauvais</button></div><div class="en"><input type="text" placeholder="Remarque…"></div></div>
+  <div class="er"><div class="el">Conservation</div><div class="eb-wrap"><button class="eb b" type="button" onclick="tog(this)">bon</button><button class="eb u" type="button" onclick="tog(this)">usage</button><button class="eb m" type="button" onclick="tog(this)">mauvais</button></div><div class="en"><input type="text" placeholder="Remarque…"></div></div>
+</div>
+<div class="card">
+  <div class="ch dk">Cages Escalier / Palier</div>
+  <div class="er"><div class="el">Éclairage</div><div class="eb-wrap"><button class="eb b" type="button" onclick="tog(this)">bon</button><button class="eb u" type="button" onclick="tog(this)">usage</button><button class="eb m" type="button" onclick="tog(this)">mauvais</button></div><div class="en"><input type="text" placeholder="Remarque…"></div></div>
+  <div class="er"><div class="el">Câblage visible</div><div class="eb-wrap"><button class="eb b" type="button" onclick="tog(this)">bon</button><button class="eb u" type="button" onclick="tog(this)">usage</button><button class="eb m" type="button" onclick="tog(this)">mauvais</button></div><div class="en"><input type="text" placeholder="Remarque…"></div></div>
+  <div class="er"><div class="el">Porte coupe-feu</div><div class="eb-wrap"><button class="eb b" type="button" onclick="tog(this)">bon</button><button class="eb u" type="button" onclick="tog(this)">usage</button><button class="eb m" type="button" onclick="tog(this)">mauvais</button></div><div class="en"><input type="text" placeholder="Remarque…"></div></div>
+  <div class="er"><div class="el">Conserv. paliers</div><div class="eb-wrap"><button class="eb b" type="button" onclick="tog(this)">bon</button><button class="eb u" type="button" onclick="tog(this)">usage</button><button class="eb m" type="button" onclick="tog(this)">mauvais</button></div><div class="en"><input type="text" placeholder="Remarque…"></div></div>
+  <div class="er"><div class="el">Conserv. cages</div><div class="eb-wrap"><button class="eb b" type="button" onclick="tog(this)">bon</button><button class="eb u" type="button" onclick="tog(this)">usage</button><button class="eb m" type="button" onclick="tog(this)">mauvais</button></div><div class="en"><input type="text" placeholder="Remarque…"></div></div>
+  <div class="er"><div class="el">Désenfumage</div><div class="eb-wrap"><button class="eb b" type="button" onclick="tog(this)">bon</button><button class="eb u" type="button" onclick="tog(this)">usage</button><button class="eb m" type="button" onclick="tog(this)">mauvais</button></div><div class="en"><input type="text" placeholder="Remarque…"></div></div>
+</div>
+<div class="card">
+  <div class="ch">Sous-sols / Caves</div>
+  <div class="er"><div class="el">Éclairage</div><div class="eb-wrap"><button class="eb b" type="button" onclick="tog(this)">bon</button><button class="eb u" type="button" onclick="tog(this)">usage</button><button class="eb m" type="button" onclick="tog(this)">mauvais</button></div><div class="en"><input type="text" placeholder="Remarque…"></div></div>
+  <div class="er"><div class="el">Câblage visible</div><div class="eb-wrap"><button class="eb b" type="button" onclick="tog(this)">bon</button><button class="eb u" type="button" onclick="tog(this)">usage</button><button class="eb m" type="button" onclick="tog(this)">mauvais</button></div><div class="en"><input type="text" placeholder="Remarque…"></div></div>
+  <div class="er"><div class="el">Réseaux visibles</div><div class="eb-wrap"><button class="eb b" type="button" onclick="tog(this)">bon</button><button class="eb u" type="button" onclick="tog(this)">usage</button><button class="eb m" type="button" onclick="tog(this)">mauvais</button></div><div class="en"><input type="text" placeholder="Remarque…"></div></div>
+  <div class="er"><div class="el">État général</div><div class="eb-wrap"><button class="eb b" type="button" onclick="tog(this)">bon</button><button class="eb u" type="button" onclick="tog(this)">usage</button><button class="eb m" type="button" onclick="tog(this)">mauvais</button></div><div class="en"><input type="text" placeholder="Remarque…"></div></div>
+  <div class="er"><div class="el">Blocs secours</div><div class="eb-wrap"><button class="eb b" type="button" onclick="tog(this)">bon</button><button class="eb u" type="button" onclick="tog(this)">usage</button><button class="eb m" type="button" onclick="tog(this)">mauvais</button></div><div class="en"><input type="text" placeholder="Remarque…"></div></div>
+  <div class="er"><div class="el">Locaux poubelles</div><div class="eb-wrap"><button class="eb b" type="button" onclick="tog(this)">bon</button><button class="eb u" type="button" onclick="tog(this)">usage</button><button class="eb m" type="button" onclick="tog(this)">mauvais</button></div><div class="en"><input type="text" placeholder="Remarque…"></div></div>
+</div>
+<div class="card">
+  <div class="ch dk">Parkings</div>
+  <div class="er"><div class="el">Éclairage</div><div class="eb-wrap"><button class="eb b" type="button" onclick="tog(this)">bon</button><button class="eb u" type="button" onclick="tog(this)">usage</button><button class="eb m" type="button" onclick="tog(this)">mauvais</button></div><div class="en"><input type="text" placeholder="Remarque…"></div></div>
+  <div class="er"><div class="el">Réseaux visibles</div><div class="eb-wrap"><button class="eb b" type="button" onclick="tog(this)">bon</button><button class="eb u" type="button" onclick="tog(this)">usage</button><button class="eb m" type="button" onclick="tog(this)">mauvais</button></div><div class="en"><input type="text" placeholder="Remarque…"></div></div>
+  <div class="er"><div class="el">État général</div><div class="eb-wrap"><button class="eb b" type="button" onclick="tog(this)">bon</button><button class="eb u" type="button" onclick="tog(this)">usage</button><button class="eb m" type="button" onclick="tog(this)">mauvais</button></div><div class="en"><input type="text" placeholder="Remarque…"></div></div>
+  <div class="er"><div class="el">Extincteurs</div><div class="eb-wrap"><button class="eb b" type="button" onclick="tog(this)">bon</button><button class="eb u" type="button" onclick="tog(this)">usage</button><button class="eb m" type="button" onclick="tog(this)">mauvais</button></div><div class="en"><input type="text" placeholder="Remarque…"></div></div>
+  <div class="er"><div class="el">Bac à sable</div><div class="eb-wrap"><button class="eb b" type="button" onclick="tog(this)">bon</button><button class="eb u" type="button" onclick="tog(this)">usage</button><button class="eb m" type="button" onclick="tog(this)">mauvais</button></div><div class="en"><input type="text" placeholder="Remarque…"></div></div>
+</div>
+<div class="navb"><button class="btn-b" type="button" onclick="go(3)">‹ Retour</button><button class="btn-n" type="button" onclick="go(5)">Appartements ›</button></div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════
-     PAGE 7 – PHOTOS ENVELOPPE
-══════════════════════════════════════════════════════ -->
-<div class="section-page" id="page-6">
-  <div class="page-header">
-    <div class="page-header-icon">
-      <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-    </div>
-    <div><h1>Photos – Enveloppe du Bâtiment</h1><p>Joindre des photos par poste</p></div>
-  </div>
+<!-- PAGE 6 APPARTEMENTS -->
 
-  <!-- MENUISERIES -->
-  <div class="photo-section">
-    <div class="photo-section-header">
-      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-      Menuiseries (Fenêtres &amp; Portes)
-    </div>
-    <div class="photo-section-body">
-      <label class="photo-add-btn" onclick="triggerPhoto('photos-menuiseries')">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        📷 Prendre une photo ou choisir depuis la galerie
-        <input type="file" id="photos-menuiseries" accept="image/*" multiple onchange="handlePhotos(this,'grid-menuiseries')">
-      </label>
-      <div class="photo-grid" id="grid-menuiseries">
-        <div class="photo-empty">Aucune photo ajoutée</div>
-      </div>
-    </div>
-  </div>
+<div class="pg" id="p5">
+<div class="ph"><div class="phi"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div><div><h2>Appartements</h2><p>Visite par logement</p></div></div>
+<div id="appt-list"></div>
+<button class="add-btn" type="button" onclick="addAppt()">＋ Ajouter un appartement</button>
+<div class="navb"><button class="btn-b" type="button" onclick="go(4)">‹ Retour</button><button class="btn-n" type="button" onclick="go(6)">Photos ›</button></div>
+</div>
 
-  <!-- MURS FACADES -->
-  <div class="photo-section">
-    <div class="photo-section-header dark">
-      <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="2" y1="9" x2="22" y2="9"/><line x1="2" y1="15" x2="22" y2="15"/><line x1="8" y1="9" x2="8" y2="21"/><line x1="16" y1="9" x2="16" y2="21"/></svg>
-      Murs / Façades
-    </div>
-    <div class="photo-section-body">
-      <label class="photo-add-btn" onclick="triggerPhoto('photos-murs')">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        📷 Prendre une photo ou choisir depuis la galerie
-        <input type="file" id="photos-murs" accept="image/*" multiple onchange="handlePhotos(this,'grid-murs')">
-      </label>
-      <div class="photo-grid" id="grid-murs">
-        <div class="photo-empty">Aucune photo ajoutée</div>
-      </div>
-    </div>
-  </div>
+<!-- PAGE 7 PHOTOS -->
 
-  <!-- TOITURE -->
-  <div class="photo-section">
-    <div class="photo-section-header">
-      <svg viewBox="0 0 24 24"><polygon points="12,2 22,12 2,12"/><rect x="4" y="12" width="16" height="10" rx="1"/></svg>
-      Toiture / Planchers Hauts
-    </div>
-    <div class="photo-section-body">
-      <label class="photo-add-btn" onclick="triggerPhoto('photos-toiture')">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        📷 Prendre une photo ou choisir depuis la galerie
-        <input type="file" id="photos-toiture" accept="image/*" multiple onchange="handlePhotos(this,'grid-toiture')">
-      </label>
-      <div class="photo-grid" id="grid-toiture">
-        <div class="photo-empty">Aucune photo ajoutée</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PLANCHERS BAS -->
-  <div class="photo-section">
-    <div class="photo-section-header dark">
-      <svg viewBox="0 0 24 24"><rect x="2" y="16" width="20" height="6" rx="1"/><line x1="6" y1="16" x2="6" y2="8"/><line x1="12" y1="16" x2="12" y2="8"/><line x1="18" y1="16" x2="18" y2="8"/><line x1="3" y1="8" x2="21" y2="8"/></svg>
-      Planchers Bas / Vide Sanitaire
-    </div>
-    <div class="photo-section-body">
-      <label class="photo-add-btn" onclick="triggerPhoto('photos-planchers')">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        📷 Prendre une photo ou choisir depuis la galerie
-        <input type="file" id="photos-planchers" accept="image/*" multiple onchange="handlePhotos(this,'grid-planchers')">
-      </label>
-      <div class="photo-grid" id="grid-planchers">
-        <div class="photo-empty">Aucune photo ajoutée</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- CHAUFFERIE -->
-  <div class="photo-section">
-    <div class="photo-section-header">
-      <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-      Chaufferie / Local Technique
-    </div>
-    <div class="photo-section-body">
-      <label class="photo-add-btn" onclick="triggerPhoto('photos-chaufferie')">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        📷 Prendre une photo ou choisir depuis la galerie
-        <input type="file" id="photos-chaufferie" accept="image/*" multiple onchange="handlePhotos(this,'grid-chaufferie')">
-      </label>
-      <div class="photo-grid" id="grid-chaufferie">
-        <div class="photo-empty">Aucune photo ajoutée</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PARTIES COMMUNES -->
-  <div class="photo-section">
-    <div class="photo-section-header dark">
-      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-      Parties Communes (Halls, Escaliers, Caves)
-    </div>
-    <div class="photo-section-body">
-      <label class="photo-add-btn" onclick="triggerPhoto('photos-communes')">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        📷 Prendre une photo ou choisir depuis la galerie
-        <input type="file" id="photos-communes" accept="image/*" multiple onchange="handlePhotos(this,'grid-communes')">
-      </label>
-      <div class="photo-grid" id="grid-communes">
-        <div class="photo-empty">Aucune photo ajoutée</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PARKINGS / SOUS-SOLS -->
-  <div class="photo-section">
-    <div class="photo-section-header">
-      <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16,8 20,8 23,11 23,16 16,16 16,8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-      Parkings / Sous-sols
-    </div>
-    <div class="photo-section-body">
-      <label class="photo-add-btn" onclick="triggerPhoto('photos-parking')">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        📷 Prendre une photo ou choisir depuis la galerie
-        <input type="file" id="photos-parking" accept="image/*" multiple onchange="handlePhotos(this,'grid-parking')">
-      </label>
-      <div class="photo-grid" id="grid-parking">
-        <div class="photo-empty">Aucune photo ajoutée</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- DIVERS -->
-  <div class="photo-section">
-    <div class="photo-section-header dark">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      Divers / Remarques visuelles
-    </div>
-    <div class="photo-section-body">
-      <label class="photo-add-btn" onclick="triggerPhoto('photos-divers')">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        📷 Prendre une photo ou choisir depuis la galerie
-        <input type="file" id="photos-divers" accept="image/*" multiple onchange="handlePhotos(this,'grid-divers')">
-      </label>
-      <div class="photo-grid" id="grid-divers">
-        <div class="photo-empty">Aucune photo ajoutée</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="nav-buttons">
-    <button class="btn btn-outline" onclick="goTo(5)" ontouchend="event.preventDefault();goTo(5)"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg> Retour</button>
-    <button class="btn btn-primary" onclick="generatePDF()" ontouchend="event.preventDefault();generatePDF()">
-      <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
-      Générer le PDF
-    </button>
-  </div>
+<div class="pg" id="p6">
+<div class="ph"><div class="phi"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg></div><div><h2>Photos – Enveloppe</h2><p>Observations et photos par poste</p></div></div>
+<div id="photo-wrap"></div>
+<div class="navb"><button class="btn-b" type="button" onclick="go(5)">‹ Retour</button><button class="btn-n" type="button" onclick="genPDF()">📄 Générer PDF</button></div>
 </div>
 
 </main>
 </div>
 
 <script>
-// ─── NAVIGATION ──────────────────────────────────────
-let currentPage = 0;
-const TOTAL = 7;
+var cur = 0;
 
-function goTo(idx) {
-  document.querySelectorAll('.section-page').forEach(p => p.classList.remove('active'));
-  for(var i=0;i<7;i++){
-    var n=document.getElementById('nav-'+i);
-    if(n) n.classList.remove('active');
-  }
-  var page = document.getElementById('page-' + idx);
-  if(page) page.classList.add('active');
-  var nav = document.getElementById('nav-' + idx);
-  if(nav) nav.classList.add('active');
-  currentPage = idx;
-  updateProgress();
-  var mc = document.getElementById('mainContent') || document.querySelector('.main');
-  if(mc) mc.scrollTop = 0;
-  window.scrollTo(0,0);
+function go(i) {
+  document.getElementById('p' + cur).classList.remove('on');
+  document.getElementById('n' + cur).classList.remove('on');
+  var mo = document.getElementById('m' + cur);
+  if (mo) mo.classList.remove('on');
+  // iPhone tabs
+  var it = document.getElementById('it' + cur);
+  if (it) it.classList.remove('on');
+  cur = i;
+  document.getElementById('p' + cur).classList.add('on');
+  document.getElementById('n' + cur).classList.add('on');
+  var mn2 = document.getElementById('m' + cur);
+  if (mn2) mn2.classList.add('on');
+  // iPhone tabs
+  var it2 = document.getElementById('it' + cur);
+  if (it2) it2.classList.add('on');
+  updateProg();
+  var main = document.getElementById('main');
+  if (main) main.scrollTop = 0;
+  window.scrollTo(0, 0);
 }
 
-function updateProgress() {
-  for (let i = 0; i < TOTAL; i++) {
-    const s = document.getElementById('pb' + i);
+function updateProg() {
+  for (var i = 0; i < 7; i++) {
+    var s = document.getElementById('ps' + i);
     if (!s) continue;
-    if (i < currentPage) { s.className = 'pb-step done'; }
-    else if (i === currentPage) { s.className = 'pb-step active'; }
-    else { s.className = 'pb-step'; }
+    if (i < cur) s.className = 'ps d';
+    else if (i === cur) s.className = 'ps c';
+    else s.className = 'ps';
   }
 }
 
-// ─── APPARTEMENTS ────────────────────────────────────
-let apptCount = 0;
+function tog(btn) {
+  btn.classList.toggle('on');
+}
 
-function addAppartement() {
+// APPARTEMENTS
+var apptCount = 0;
+
+function mkChip(txt) {
+  var b = document.createElement('button');
+  b.className = 'chip';
+  b.type = 'button';
+  b.textContent = txt;
+  b.onclick = function() { this.classList.toggle('on'); };
+  return b;
+}
+
+function mkField(label, content) {
+  var wrap = document.createElement('div');
+  wrap.className = 'fl';
+  var lbl = document.createElement('div');
+  lbl.className = 'fll';
+  lbl.textContent = label;
+  wrap.appendChild(lbl);
+  wrap.appendChild(content);
+  return wrap;
+}
+
+function mkChips(items) {
+  var div = document.createElement('div');
+  div.className = 'chips';
+  items.forEach(function(t) { div.appendChild(mkChip(t)); });
+  return div;
+}
+
+function addAppt() {
   apptCount++;
-  const id = apptCount;
-  const container = document.getElementById('appt-container');
-  const div = document.createElement('div');
-  div.className = 'appt-card';
-  div.id = 'appt-' + id;
-  div.innerHTML = `
-    <div class="appt-card-header">
-      Appartement n° <input type="text" placeholder="${id}" id="appt_nb_${id}">
-      <span style="font-size:11px;opacity:0.6;margin-left:auto;cursor:pointer;" onclick="removeAppt(${id})">✕ Supprimer</span>
-    </div>
-    <div class="card-body">
-      <div class="form-row">
-        <div class="form-label">Contact</div>
-        <div class="form-field" style="gap:16px;">
-          <input type="text" style="flex:1" placeholder="Nom du résident…">
-          <span style="font-size:12px;font-weight:600;color:var(--blue-dark)">Nbr pièces :</span>
-          <input type="number" style="width:70px" min="1">
-          <span style="font-size:12px;font-weight:600;color:var(--blue-dark)">Surface :</span>
-          <input type="number" style="width:80px" placeholder="m²">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Emplacement</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">RDC</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Étage intermédiaire</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Dernier</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Chauffage</div>
-        <div class="form-field" style="flex-direction:column;align-items:flex-start;gap:8px;">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Chaudière gaz</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Chauffage électrique</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Autre</button>
-            <input type="text" placeholder="Préciser…" style="border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:12px;width:140px;outline:none;">
-          </div>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span style="font-size:12px;font-weight:600;color:var(--blue-dark)">Marque / Année :</span>
-            <input type="text" placeholder="ex. Saunier Duval / 2008" style="border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:12px;flex:1;outline:none;">
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Si gaz : émission</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Robinets simples</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Robinets thermostatiques</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Si élec : émission</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Convecteurs vétustes</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Convecteurs récents</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Panneaux rayonnants</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Radiateur inertie</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">ECS</div>
-        <div class="form-field" style="flex-direction:column;align-items:flex-start;gap:8px;">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Chauffe-eau gaz</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Ballon électrique</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Autre</button>
-          </div>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span style="font-size:12px;font-weight:600;color:var(--blue-dark)">Volume / Marque / Année :</span>
-            <input type="text" placeholder="ex. 100L / Atlantic / 2018" style="border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:12px;flex:1;outline:none;">
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Ventilation</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Pas de ventil</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">VN</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">VMC auto</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">VMC Hygro A</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">VMC Hygro B</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-label">Pathologies vues</div>
-        <div class="form-field">
-          <div class="opts">
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Humidité</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Fissures</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Odeurs</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Inconfort hiver</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Inconfort été</button>
-            <button class="opt-btn" onclick="toggleOpt(this)" type="button">Infiltrations</button>
-          </div>
-        </div>
-      </div>
-      <div class="form-row" style="min-height:auto;padding:12px 0;">
-        <div class="form-label" style="align-self:flex-start;padding-top:12px;">Dimensions menuiseries</div>
-        <div class="form-field" style="padding:8px;">
-          <table class="menu-table" style="width:100%">
-            <tr><th>Nom</th><th>Matériau</th><th>Vitrage</th><th>Volet</th><th>Largeur</th><th>Hauteur</th><th>Schéma</th></tr>
-            <tr><td><input type="text" placeholder="Séjour"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:60px"></td><td><input type="text" style="width:60px"></td><td><input type="text"></td></tr>
-            <tr><td><input type="text" placeholder="Chambre 1"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:60px"></td><td><input type="text" style="width:60px"></td><td><input type="text"></td></tr>
-            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:60px"></td><td><input type="text" style="width:60px"></td><td><input type="text"></td></tr>
-            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:60px"></td><td><input type="text" style="width:60px"></td><td><input type="text"></td></tr>
-            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:60px"></td><td><input type="text" style="width:60px"></td><td><input type="text"></td></tr>
-            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:60px"></td><td><input type="text" style="width:60px"></td><td><input type="text"></td></tr>
-          </table>
-        </div>
-      </div>
-    </div>
-  `;
-  container.appendChild(div);
+  var id = apptCount;
+  var card = document.createElement('div');
+  card.className = 'ac';
+  card.id = 'ap' + id;
+
+  // Header
+  var hd = document.createElement('div');
+  hd.className = 'ah';
+  hd.innerHTML = 'Appartement n\u00b0\u00a0';
+  var nbInput = document.createElement('input');
+  nbInput.type = 'text';
+  nbInput.value = String(id);
+  hd.appendChild(nbInput);
+  var del = document.createElement('button');
+  del.className = 'adel';
+  del.type = 'button';
+  del.textContent = '\u2715 Suppr.';
+  del.onclick = (function(cardId) { return function() { document.getElementById(cardId).remove(); }; })('ap' + id);
+  hd.appendChild(del);
+  card.appendChild(hd);
+
+  // Contact
+  var fb1 = document.createElement('div');
+  fb1.className = 'flb';
+  var r1 = document.createElement('div');
+  r1.className = 'r2';
+  var inp1 = document.createElement('input'); inp1.type='text'; inp1.placeholder='Nom résident';
+  var inp2 = document.createElement('input'); inp2.type='number'; inp2.placeholder='Pièces';
+  var inp3 = document.createElement('input'); inp3.type='number'; inp3.placeholder='m²';
+  r1.appendChild(inp1); r1.appendChild(inp2); r1.appendChild(inp3);
+  fb1.appendChild(r1);
+  card.appendChild(mkField('Contact / Pièces / Surface', fb1));
+
+  // Emplacement
+  card.appendChild(mkField('Emplacement', mkChips(['RDC','Étage intermédiaire','Dernier'])));
+
+  // Chauffage
+  var chDiv = document.createElement('div');
+  chDiv.appendChild(mkChips(['Chaudière gaz','Chauffage électrique','Autre']));
+  var chFb = document.createElement('div'); chFb.className='flb';
+  var chInp = document.createElement('input'); chInp.type='text'; chInp.placeholder='Marque / Année';
+  chFb.appendChild(chInp); chDiv.appendChild(chFb);
+  card.appendChild(mkField('Chauffage', chDiv));
+
+  card.appendChild(mkField('Émission gaz', mkChips(['Robinets simples','Robinets thermostatiques'])));
+  card.appendChild(mkField('Émission élec', mkChips(['Convecteurs vétustes','Convecteurs récents','Panneaux rayonnants','Radiateur inertie'])));
+
+  // ECS
+  var ecsDiv = document.createElement('div');
+  ecsDiv.appendChild(mkChips(['Chauffe-eau gaz','Ballon électrique','Autre']));
+  var ecsFb = document.createElement('div'); ecsFb.className='flb';
+  var ecsInp = document.createElement('input'); ecsInp.type='text'; ecsInp.placeholder='Volume / Marque / Année';
+  ecsFb.appendChild(ecsInp); ecsDiv.appendChild(ecsFb);
+  card.appendChild(mkField('ECS', ecsDiv));
+
+  card.appendChild(mkField('Ventilation', mkChips(['Pas de ventil','VN','VMC auto','VMC Hygro A','VMC Hygro B'])));
+  card.appendChild(mkField('Pathologies', mkChips(['Humidité','Fissures','Odeurs','Inconfort hiver','Inconfort été','Infiltrations'])));
+
+  // Menuiseries table
+  var tFb = document.createElement('div'); tFb.className='flb';
+  var tw = document.createElement('div'); tw.className='tw';
+  var tbl = document.createElement('table');
+  var thead = '<tr><th>Nom</th><th>Matériau</th><th>Vitrage</th><th>Volet</th><th>Larg.</th><th>Haut.</th></tr>';
+  var rows = thead;
+  var placeholders = ['Séjour','Chambre 1','','','',''];
+  for (var r=0; r<6; r++) {
+    rows += '<tr><td><input type="text" placeholder="'+placeholders[r]+'"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text" style="width:55px"></td><td><input type="text" style="width:55px"></td></tr>';
+  }
+  tbl.innerHTML = rows;
+  tw.appendChild(tbl); tFb.appendChild(tw);
+  card.appendChild(mkField('Menuiseries', tFb));
+
+  document.getElementById('appt-list').appendChild(card);
 }
 
-function removeAppt(id) {
-  const el = document.getElementById('appt-' + id);
-  if (el) el.remove();
-}
+// PHOTOS
+var photoList = [
+  'Menuiseries (Fenêtres et Portes)',
+  'Murs / Façades',
+  'Toiture / Planchers Hauts',
+  'Planchers Bas / Vide Sanitaire',
+  'Chaufferie / Local Technique',
+  'Parties Communes (Halls, Escaliers)',
+  'Parkings / Sous-sols',
+  'Divers / Remarques visuelles'
+];
 
-// ─── PHOTOS ───────────────────────────────────────────
-// On iOS/Android, triggerPhoto() clicks the hidden file input
-// which opens the camera (capture="environment")
-function triggerPhoto(inputId) {
-  document.getElementById(inputId).click();
-}
+(function buildPhotos() {
+  var wrap = document.getElementById('photo-wrap');
+  photoList.forEach(function(title, i) {
+    var sec = document.createElement('div');
+    sec.className = 'pc';
 
-// Convert each selected file to a base64 img and inject into the grid
-function handlePhotos(input, gridId) {
-  const grid = document.getElementById(gridId);
-  // Remove empty placeholder if present
-  const empty = grid.querySelector('.photo-empty');
+    // Header
+    var hd = document.createElement('div');
+    hd.className = (i % 2 === 0) ? 'pch a' : 'pch b';
+    var svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('viewBox','0 0 24 24');
+    svg.style.cssText = 'width:15px;height:15px;fill:white;flex-shrink:0';
+    svg.innerHTML = '<path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/>';
+    hd.appendChild(svg);
+    hd.appendChild(document.createTextNode(' ' + title));
+    sec.appendChild(hd);
+
+    // Body
+    var body = document.createElement('div');
+    body.className = 'pcb';
+
+    // Note label
+    var nlbl = document.createElement('div');
+    nlbl.className = 'pnl';
+    nlbl.textContent = 'Observations / Remarques';
+    body.appendChild(nlbl);
+
+    // Textarea
+    var ta = document.createElement('textarea');
+    ta.className = 'pnote';
+    ta.id = 'note' + i;
+    ta.placeholder = 'Décrivez les observations, défauts constatés, mesures relevées...';
+    body.appendChild(ta);
+
+    // File input
+    var fi = document.createElement('input');
+    fi.type = 'file';
+    fi.id = 'fi' + i;
+    fi.accept = 'image/*';
+    fi.multiple = true;
+    fi.style.display = 'none';
+    (function(idx) {
+      fi.addEventListener('change', function() { addPhotos(this, 'grid' + idx); });
+    })(i);
+    body.appendChild(fi);
+
+    // Photo button
+    var pbtn = document.createElement('button');
+    pbtn.className = 'pbtn';
+    pbtn.type = 'button';
+    pbtn.textContent = '📷 Prendre / Choisir une photo';
+    (function(idx) {
+      pbtn.addEventListener('click', function() {
+        document.getElementById('fi' + idx).click();
+      });
+    })(i);
+    body.appendChild(pbtn);
+
+    // Grid
+    var grid = document.createElement('div');
+    grid.className = 'pgrid';
+    grid.id = 'grid' + i;
+    var empty = document.createElement('div');
+    empty.className = 'pmt';
+    empty.textContent = 'Aucune photo ajoutée';
+    grid.appendChild(empty);
+    body.appendChild(grid);
+
+    sec.appendChild(body);
+    wrap.appendChild(sec);
+  });
+})();
+
+function addPhotos(input, gridId) {
+  var grid = document.getElementById(gridId);
+  var empty = grid.querySelector('.pmt');
   if (empty) empty.remove();
-
-  Array.from(input.files).forEach(file => {
+  var files = Array.prototype.slice.call(input.files);
+  files.forEach(function(file) {
     if (!file.type.startsWith('image/')) return;
-    const reader = new FileReader();
+    var reader = new FileReader();
     reader.onload = function(e) {
-      const uid = 'photo_' + Date.now() + '_' + Math.random().toString(36).substr(2,5);
-      const item = document.createElement('div');
-      item.className = 'photo-item';
+      var uid = 'ph' + Date.now() + Math.floor(Math.random() * 9999);
+      var item = document.createElement('div');
+      item.className = 'pitem';
       item.id = uid;
-
-      // Get timestamp
-      const now = new Date();
-      const ts = now.toLocaleDateString('fr-FR') + ' ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'});
-
-      item.innerHTML = `
-        <img src="${e.target.result}" alt="Photo" loading="lazy">
-        <div class="photo-item-footer">
-          <input type="text" placeholder="Légende (ex: Façade Nord…)" value="${ts}">
-          <button class="photo-del-btn" onclick="deletePhoto('${uid}','${gridId}')" title="Supprimer">✕</button>
-        </div>
-      `;
+      var img = document.createElement('img');
+      img.src = e.target.result;
+      img.alt = 'photo';
+      item.appendChild(img);
+      var ft = document.createElement('div');
+      ft.className = 'pft';
+      var cap = document.createElement('input');
+      cap.type = 'text';
+      var d = new Date();
+      cap.value = d.toLocaleDateString('fr-FR') + ' ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+      cap.placeholder = 'Légende...';
+      ft.appendChild(cap);
+      var del = document.createElement('button');
+      del.className = 'pdel';
+      del.type = 'button';
+      del.textContent = '\u2715';
+      (function(itemId, gId) {
+        del.addEventListener('click', function() {
+          var el = document.getElementById(itemId);
+          if (el) el.remove();
+          var g = document.getElementById(gId);
+          if (g && g.querySelectorAll('.pitem').length === 0) {
+            var mt = document.createElement('div');
+            mt.className = 'pmt';
+            mt.textContent = 'Aucune photo ajoutée';
+            g.appendChild(mt);
+          }
+        });
+      })(uid, gridId);
+      ft.appendChild(del);
+      item.appendChild(ft);
       grid.appendChild(item);
     };
     reader.readAsDataURL(file);
   });
-
-  // Reset the input so the same photo can be re-selected
   input.value = '';
 }
 
-function deletePhoto(uid, gridId) {
-  const el = document.getElementById(uid);
-  if (el) el.remove();
-  // If grid is now empty, restore placeholder
-  const grid = document.getElementById(gridId);
-  if (grid && grid.querySelectorAll('.photo-item').length === 0) {
-    grid.innerHTML = '<div class="photo-empty">Aucune photo ajoutée</div>';
-  }
-}
-
-// ─── PDF GENERATION ──────────────────────────────────
-function generatePDF() {
-  window.print();
-}
-
-
-
-// ─── OPT & ETAT BUTTON LOGIC (iOS safe) ─────────────────────────────────
-function toggleOpt(btn) {
-  btn.classList.toggle('selected');
-}
-
-function toggleEtat(btn) {
-  var parent = btn.parentElement;
-  var kind = btn.classList.contains('bon') ? 'bon' : 
-             btn.classList.contains('usage') ? 'usage' : 'mauvais';
-  // For etat, each color is independent toggle
-  btn.classList.toggle('selected');
-}
-
-// ─── iOS SAFARI CHECKBOX FIX ──────────────────────────────────────────────
-// On iOS, labels don't always toggle checkboxes — force it via JS
-document.addEventListener('DOMContentLoaded', function() {
-  // Make all opt-labels work on touch
-  document.querySelectorAll('.opt-label').forEach(function(label) {
-    label.addEventListener('touchend', function(e) {
-      e.preventDefault();
-      var cb = this.previousElementSibling;
-      if (cb && cb.type === 'checkbox') {
-        cb.checked = !cb.checked;
-        // Trigger change event for any listeners
-        cb.dispatchEvent(new Event('change', {bubbles: true}));
-      }
-    });
+// PDF GENERATION
+function genPDF() {
+  // Show all pages
+  var pages = document.querySelectorAll('.pg');
+  pages.forEach(function(p) {
+    p.style.cssText = 'display:block!important;visibility:visible!important;height:auto!important;overflow:visible!important;';
   });
-
-  // Fix etat labels (bon/usage/mauvais) on iOS
-  document.querySelectorAll('.etat-opt + label').forEach(function(label) {
-    label.addEventListener('touchend', function(e) {
-      e.preventDefault();
-      var cb = this.previousElementSibling;
-      if (cb) {
-        cb.checked = !cb.checked;
-        cb.dispatchEvent(new Event('change', {bubbles: true}));
-      }
-    });
+  // Show all photo sections
+  var photos = document.querySelectorAll('.pc');
+  photos.forEach(function(p) {
+    p.style.cssText = 'display:block!important;visibility:visible!important;height:auto!important;';
   });
-  
-  // Fix navigation: ensure goTo works on touch
-  document.querySelectorAll('[onclick*="goTo"]').forEach(function(el) {
-    el.addEventListener('touchend', function(e) {
-      e.preventDefault();
-      var fn = this.getAttribute('onclick');
-      if (fn) eval(fn);
-    });
-  });
-});
+  // Show appt list
+  var al = document.getElementById('appt-list');
+  if (al) al.style.cssText = 'display:block!important;visibility:visible!important;';
+  // Show photo wrap
+  var pw = document.getElementById('photo-wrap');
+  if (pw) pw.style.cssText = 'display:block!important;visibility:visible!important;';
 
-// ─── iOS / iPAD DETECTION ────────────────────────────
-const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-              (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-const isIPad = /iPad/.test(navigator.userAgent) || 
-               (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-
-// On iPad: offer choice camera/library via action sheet simulation
-// On iPhone: direct camera
-function triggerPhoto(inputId) {
-  const input = document.getElementById(inputId);
-  if (isIPad) {
-    // iPad: no capture attr = shows native picker (camera + library)
-    input.removeAttribute('capture');
-  } else if (isIOS) {
-    // iPhone: direct camera
-    input.setAttribute('capture', 'environment');
-  } else {
-    // Desktop/Android: remove capture to allow file picker
-    input.removeAttribute('capture');
-  }
-  input.click();
+  // Wait for reflow then print
+  setTimeout(function() {
+    window.print();
+    // Restore
+    setTimeout(function() {
+      pages.forEach(function(p) { p.style.cssText = ''; });
+      photos.forEach(function(p) { p.style.cssText = ''; });
+      if (al) al.style.cssText = '';
+      if (pw) pw.style.cssText = '';
+      // Re-show only current page
+      var cp = document.getElementById('p' + cur);
+      if (cp) cp.style.cssText = 'display:block!important;';
+    }, 2000);
+  }, 350);
 }
 
-// Fix for iOS: prevent body scroll when sidebar is in use
-document.addEventListener('touchmove', function(e) {
-  if (e.target.closest('.sidebar')) e.preventDefault();
-}, { passive: false });
-
-// Fix iOS input date display
-document.querySelectorAll('input[type="date"]').forEach(inp => {
-  if (isIOS && !inp.value) {
-    inp.type = 'text';
-    inp.placeholder = 'JJ/MM/AAAA';
-  }
-});
-
-// ─── INIT ─────────────────────────────────────────────
-addAppartement();
-addAppartement();
-updateProgress();
-
-// Show install hint on iOS
-if (isIOS && !navigator.standalone) {
-  setTimeout(() => {
-    const hint = document.createElement('div');
-    hint.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#0d3f5e;color:white;padding:10px 18px;border-radius:20px;font-size:12px;font-weight:600;z-index:9999;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.3);max-width:280px;';
-    hint.innerHTML = '📲 Astuce : Appuyez sur <strong>Partager</strong> puis <strong>"Sur l'écran d'accueil"</strong> pour installer l'app';
-    document.body.appendChild(hint);
-    setTimeout(() => hint.remove(), 6000);
-  }, 2000);
-}
+// INIT
+addAppt();
+addAppt();
+updateProg();
 </script>
+
+<!-- iPhone tab bar -->
+
+<nav class="iphone-tabs" id="iphone-tabs">
+  <button class="it on" id="it0" type="button" onclick="go(0)"><span class="nn">1</span>Ident.</button>
+  <button class="it" id="it1" type="button" onclick="go(1)"><span class="nn">2</span>Chauf.</button>
+  <button class="it" id="it2" type="button" onclick="go(2)"><span class="nn">3</span>Murs</button>
+  <button class="it" id="it3" type="button" onclick="go(3)"><span class="nn">4</span>Planch.</button>
+  <button class="it" id="it4" type="button" onclick="go(4)"><span class="nn">5</span>Comm.</button>
+  <button class="it" id="it5" type="button" onclick="go(5)"><span class="nn">6</span>Appts</button>
+  <button class="it" id="it6" type="button" onclick="go(6)"><span class="nn">7</span>Photos</button>
+  <button class="it-pdf" type="button" onclick="genPDF()">📄</button>
+</nav>
+
 </body>
 </html>
